@@ -32,10 +32,10 @@ export default function Header() {
                     <UploadCloud size={18} />
                     Upload MIDI
                 </button>
-                <button className="btn btn-secondary">
+                <Link to="/login" className="btn btn-secondary" style={{ display: 'flex', textDecoration: 'none' }}>
                     <LogIn size={18} />
                     Log In
-                </button>
+                </Link>
             </div>
         </header>
     );

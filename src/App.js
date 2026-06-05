@@ -9,28 +9,30 @@ import MainPage from './pages/MainPage';
 import AboutPage from './pages/AboutPage';
 import DMCAPage from './pages/DMCAPage';
 import ContactsPage from './pages/ContactsPage';
+import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import MainLayout from './components/MainLayout';
 
 function App() {
   return (
       <BrowserRouter>
-        <div className="app-container">
-          <Header />
+        <Routes>
+          {/* --- ГРУППА 1: ЧИСТЫЕ СТРАНИЦЫ (Без шапки и футера) --- */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
-          <div className="main-wrapper">
-            <Sidebar />
-
-            <main className="content">
-              <Routes>
-                <Route path="/" element={<MainPage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/dmca" element={<DMCAPage />} />
-                <Route path="/contacts" element={<ContactsPage />} />
-              </Routes>
-            </main>
-          </div>
-
-          <Footer />
-        </div>
+          {/* --- ГРУППА 2: СТАНДАРТНЫЕ СТРАНИЦЫ (Обернуты в MainLayout) --- */}
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/dmca" element={<DMCAPage />} />
+            <Route path="/contacts" element={<ContactsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+          </Route>
+        </Routes>
       </BrowserRouter>
   );
 }

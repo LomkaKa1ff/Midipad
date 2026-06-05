@@ -23,21 +23,18 @@ export default function Footer() {
                     <Link to="/about">About us</Link>
                     <Link to="/dmca">DMCA / Copyright</Link>
                     <Link to="/contacts">Contacts</Link>
+                    <Link to="/privacy">Privacy Policy</Link>
+                    <Link to="/terms">Terms of Use</Link>
                 </div>
 
                 <div className="footer-col">
                     <h3>Links</h3>
                     <a href="/">Donate</a>
-                    <a href="/">VIP Status</a>
-                    <a href="/">Telegram Channel</a>
-                    <a href="/">Discord Server</a>
                 </div>
 
                 <div className="footer-col">
                     <h3>Contacts</h3>
                     <a href="mailto:support@midipad.me">support@midipad.me</a>
-                    <a href="/">Telegram</a>
-                    <a href="/">Discord</a>
                 </div>
             </div>
 

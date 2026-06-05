@@ -62,6 +62,11 @@ button {
   pointer-events: none; /* Чтобы фон не блокировал кнопки */
 }
 
+.content-overlay {
+  position: relative;
+  z-index: 100; /* Ставим максимально высоко */
+}
+
 /* =========================================
    Header (Шапка сайта)
 ========================================= */
@@ -78,7 +83,6 @@ button {
   z-index: 20;
 }
 
-/* Обертка логотипа теперь ведет себя как кнопка */
 .logo-container {
   display: flex;
   align-items: center;
@@ -93,11 +97,10 @@ button {
   opacity: 0.8;
 }
 
-/* Убрали черные рамки, фон и тени. Оставили только чистую картинку */
 .logo-image {
   width: 44px;
   height: 44px;
-  object-fit: contain; /* contain гарантирует, что лого не обрежется по краям */
+  object-fit: contain;
   background: transparent;
 }
 
@@ -105,6 +108,29 @@ button {
   font-size: 1.5rem;
   font-weight: 900;
   letter-spacing: -0.5px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.header-link {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.header-link:hover {
+  color: white;
 }
 
 /* Поиск */
@@ -144,30 +170,6 @@ button {
   display: flex;
   gap: 1rem;
   align-items: center;
-}
-
-/* Добавь это сразу после стилей .logo-text */
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 2rem; /* Расстояние между логотипом и ссылками */
-}
-
-.header-nav {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.header-link {
-  color: var(--text-muted);
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.header-link:hover {
-  color: white;
 }
 
 .btn {
@@ -280,8 +282,8 @@ button {
 }
 
 .midi-card {
-  background: rgba(12, 12, 12, 0.85); /* Затемненный фон */
-  backdrop-filter: blur(12px); /* Эффект матового стекла */
+  background: rgba(12, 12, 12, 0.85);
+  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1rem;
@@ -299,7 +301,6 @@ button {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
 }
 
-/* Имитация Piano Roll в карточке */
 .piano-roll {
   height: 80px;
   background: rgba(255, 255, 255, 0.03);
@@ -358,7 +359,6 @@ button {
   transform: scale(1.1);
 }
 
-/* Детали внутри карточки */
 .card-title {
   margin: 0;
   font-size: 1.1rem;
@@ -444,6 +444,9 @@ button {
   color: var(--text-muted);
 }
 
+/* =========================================
+   Text Pages (О нас, Правила и т.д.)
+========================================= */
 .text-content {
   max-width: 800px;
   margin: 0 auto;
@@ -478,12 +481,13 @@ button {
 ========================================= */
 .footer {
   border-top: 1px solid var(--border);
-  background: rgba(10, 10, 10, 10);
+  background: rgba(10, 10, 10, 1); /* Изменил прозрачность на 1 для надежности */
   margin-top: auto;
   position: relative;
   z-index: 10;
   padding: 3rem 2rem 1rem 2rem;
 }
+
 .footer-content {
   width: 100%;
   display: grid;
@@ -499,25 +503,30 @@ button {
 @media (max-width: 600px) {
   .footer-content { grid-template-columns: 1fr; }
 }
+
 .footer-col {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
+
 .footer-col h3 {
   color: white;
   font-size: 1rem;
   margin: 0 0 0.5rem 0;
 }
+
 .footer-col a, .footer-col p {
   color: var(--text-muted);
   font-size: 0.875rem;
   margin: 0;
   transition: color 0.2s;
 }
+
 .footer-col a:hover {
   color: white;
 }
+
 .footer-bottom {
   text-align: center;
   padding-top: 1.5rem;
@@ -525,31 +534,167 @@ button {
   font-size: 0.875rem;
 }
 
-.footer-info {
+/* =========================================
+   Auth Pages (Стиль чистого экрана логина)
+========================================= */
+.auth-page-container {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  color: var(--text-muted);
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--text-muted);
-  font-size: 0.875rem;
+  font-size: 0.9rem;
+  transition: color 0.2s;
 }
 
-.footer-links {
-  display: flex;
-  gap: 1.5rem;
-  font-size: 0.875rem;
-  color: var(--text-muted);
-}
-
-.footer-links a:hover {
+.back-button:hover {
   color: white;
 }
 
-.footer-copyright {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.53);
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(15, 15, 15, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 2.5rem;
 }
 
-.content-overlay {
-  position: relative;
-  z-index: 100; /* Ставим максимально высоко */
+.auth-card h1 {
+  color: white;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.auth-input-group label {
+  color: #a0a0a0;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.auth-input {
+  width: 100%;
+  background: #0f0f0f;
+  border: 1px solid #222;
+  color: white;
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.auth-input:focus {
+  border-color: #444;
+  background: #151515;
+}
+
+.auth-error {
+  color: #ff5555;
+  background: rgba(255, 85, 85, 0.1);
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.btn-auth-submit {
+  width: 100%;
+  background: white;
+  color: black;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: opacity 0.2s;
+}
+
+.btn-auth-submit:hover {
+  opacity: 0.9;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #555;
+  font-size: 0.8rem;
+  margin: 1.5rem 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #222;
+}
+
+.auth-divider:not(:empty)::before {
+  margin-right: .5em;
+}
+
+.auth-divider:not(:empty)::after {
+  margin-left: .5em;
+}
+
+.btn-discord {
+  width: 100%;
+  background: #5865F2;
+  color: white;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-discord:hover {
+  background: #4752C4;
+}
+
+.auth-footer {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.auth-footer a {
+  color: #a0a0a0;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.auth-footer a:hover {
+  color: white;
 }
