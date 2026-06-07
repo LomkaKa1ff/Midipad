@@ -5,7 +5,6 @@ import { ArrowLeft } from 'lucide-react';
 export default function RegisterPage() {
     const navigate = useNavigate();
 
-    // 1. Добавили confirmPassword в начальное состояние
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -22,26 +21,56 @@ export default function RegisterPage() {
         e.preventDefault();
         setError('');
 
-        // 2. ПРОВЕРКА: Совпадают ли пароли?
-        if (formData.password !== formData.confirmPassword) {
-            return setError('Passwords do not match!'); // Останавливаем отправку и выдаем ошибку
+        const { username, email, password, confirmPassword } = formData;
+
+        // ПРОВЕРКИ
+        if (username.length < 3 || username.length > 16) {
+            return setError('Username must be between 3 and 16 characters.');
+        }
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+            return setError('Username can only contain letters, numbers, and underscores.');
+        }
+        if (password.length < 8) {
+            return setError('Password must be at least 8 characters long.');
+        }
+        const digitsCount = (password.match(/\d/g) || []).length;
+        if (digitsCount < 3) {
+            return setError('Password must contain at least 3 numbers.');
+        }
+        if (password !== confirmPassword) {
+            return setError('Passwords do not match!');
         }
 
         setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:5000/api/auth/register', {
+            // 1. РЕГИСТРИРУЕМ ПОЛЬЗОВАТЕЛЯ
+            const regResponse = await fetch('http://localhost:5000/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                // На бэкенд отправляем только 3 нужных поля, confirmPassword серверу не нужен
-                body: JSON.stringify({
-                    username: formData.username,
-                    email: formData.email,
-                    password: formData.password
-                })
+                body: JSON.stringify({ username, email, password })
             });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || 'Registration failed');
-            navigate('/login');
+            const regData = await regResponse.json();
+
+            if (!regResponse.ok) throw new Error(regData.message || 'Registration failed');
+
+            // 2. МАГИЯ: СРАЗУ ЛОГИНИМ ЕГО
+            const loginResponse = await fetch('http://localhost:5000/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const loginData = await loginResponse.json();
+
+            if (loginResponse.ok) {
+                // Если логин успешен — сохраняем токен и кидаем на главную!
+                localStorage.setItem('token', loginData.token);
+                localStorage.setItem('user', JSON.stringify(loginData.user));
+                navigate('/');
+            } else {
+                // Если что-то пошло не так при автологине, кидаем на ручной логин
+                navigate('/login');
+            }
+
         } catch (err) {
             setError(err.message);
         } finally {
@@ -64,12 +93,12 @@ export default function RegisterPage() {
                 <form className="auth-form" onSubmit={handleSubmit}>
                     <div className="auth-input-group">
                         <label>Email</label>
-                        <input type="email" name="email" className="auth-input" placeholder="your@email.com" required value={formData.email} onChange={handleChange} />
+                        <input type="email" name="email" className="auth-input" placeholder="example@email.com" required value={formData.email} onChange={handleChange} />
                     </div>
 
                     <div className="auth-input-group">
                         <label>Username</label>
-                        <input type="text" name="username" className="auth-input" placeholder="cooluser123" required value={formData.username} onChange={handleChange} />
+                        <input type="text" name="username" className="auth-input" placeholder="username123" required value={formData.username} onChange={handleChange} />
                     </div>
 
                     <div className="auth-input-group">
@@ -77,7 +106,6 @@ export default function RegisterPage() {
                         <input type="password" name="password" className="auth-input" placeholder="••••••••" required value={formData.password} onChange={handleChange} />
                     </div>
 
-                    {/* 3. Добавили новое поле ввода для Confirm Password */}
                     <div className="auth-input-group">
                         <label>Confirm Password</label>
                         <input type="password" name="confirmPassword" className="auth-input" placeholder="••••••••" required value={formData.confirmPassword} onChange={handleChange} />

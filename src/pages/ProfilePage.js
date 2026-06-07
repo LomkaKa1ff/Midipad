@@ -1,55 +1,72 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MidiCard from '../components/MidiCard';
 import FaultyTerminal from '../components/backgrounds/FaultyTerminal';
+import { User, UploadCloud, Heart } from 'lucide-react';
 
-export default function MainPage() {
-    const [searchParams] = useSearchParams();
+export default function ProfilePage() {
+    const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    const userStr = localStorage.getItem('user');
+    const user = userStr ? JSON.parse(userStr) : null;
 
-    const activeTab = searchParams.get('sort') || 'trending';
-    // ЧИТАЕМ ПАРАМЕТР ПОИСКА ИЗ URL
-    const searchQuery = searchParams.get('search') || '';
-
-    const [midis, setMidis] = useState([]);
+    // Стейты для вкладок и данных
+    const [activeTab, setActiveTab] = useState('uploads'); // 'uploads' или 'liked'
+    const [tracks, setTracks] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
+    // Пагинация для профиля (тоже по 16 треков)
     const [currentPage, setCurrentPage] = useState(1);
     const tracksPerPage = 16;
 
-    // Сбрасываем на 1 страницу, если сменили вкладку ИЛИ ввели новый поиск
+    // Редирект на логин, если юзер не авторизован
     useEffect(() => {
-        setCurrentPage(1);
-    }, [activeTab, searchQuery]);
+        if (!token || !user) {
+            navigate('/login');
+        }
+    }, [token, user, navigate]);
 
+    // Загрузка треков в зависимости от активной вкладки
     useEffect(() => {
-        const fetchMidis = async () => {
+        if (!token) return;
+
+        const fetchProfileData = async () => {
             setIsLoading(true);
             try {
-                // ФИКС: Отправляем на бэкенд и сортировку, и поисковой запрос
-                const response = await fetch(`http://localhost:5000/api/midi?sort=${activeTab}&search=${searchQuery}`);
+                const endpoint = activeTab === 'uploads' ? 'uploads' : 'liked';
+                const response = await fetch(`http://localhost:5000/api/midi/profile/${endpoint}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 const data = await response.json();
 
                 if (response.ok) {
-                    setMidis(data);
+                    setTracks(data);
                 }
             } catch (error) {
-                console.error("Failed to fetch MIDIs:", error);
+                console.error("Error fetching profile tracks:", error);
             } finally {
                 setIsLoading(false);
             }
         };
 
-        fetchMidis();
-    }, [activeTab, searchQuery]); // Эффект перезапускается при любом изменении в URL
+        fetchProfileData();
+        setCurrentPage(1); // Сбрасываем страницу при смене вкладки
+    }, [activeTab, token]);
 
+    // Скролл наверх при пагинации
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [currentPage]);
 
+    if (!user) return null;
+
+    // Вычисления пагинации
     const indexOfLastTrack = currentPage * tracksPerPage;
     const indexOfFirstTrack = indexOfLastTrack - tracksPerPage;
-    const currentTracks = midis.slice(indexOfFirstTrack, indexOfLastTrack);
-    const totalPages = Math.ceil(midis.length / tracksPerPage);
+    const currentTracks = tracks.slice(indexOfFirstTrack, indexOfLastTrack);
+    const totalPages = Math.ceil(tracks.length / tracksPerPage);
 
     return (
         <>
@@ -75,26 +92,55 @@ export default function MainPage() {
                 />
             </div>
 
-            <div className="mb-large text-center">
-                <h1 className="title-main">
-                    Upload, download, and listen to <br/>
-                    <span className="title-gradient">MIDI music without limits.</span>
+            {/* Шапка профиля */}
+            <div className="profile-header text-center mb-large" style={{ marginTop: '2rem' }}>
+                <div className="profile-avatar" style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.05)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 1rem',
+                    border: '1px solid rgba(255,255,255,0.1)'
+                }}>
+                    <User size={40} color="white" />
+                </div>
+                <h1 className="title-main" style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>
+                    {user.username}
                 </h1>
-                <p className="text-muted">A shared database of melodies for your favorite games.</p>
+                <p className="text-muted">Member since {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'recently'}</p>
             </div>
 
+            {/* Вкладки Сайдбара перенесены в мини-меню профиля */}
+            <div className="profile-tabs" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '3rem' }}>
+                <div
+                    className={`nav-item ${activeTab === 'uploads' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('uploads')}
+                    style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}
+                >
+                    <UploadCloud size={18} /> My Uploads ({activeTab === 'uploads' ? tracks.length : '...'})
+                </div>
+                <div
+                    className={`nav-item ${activeTab === 'liked' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('liked')}
+                    style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}
+                >
+                    <Heart size={18} /> Liked Tracks ({activeTab === 'liked' ? tracks.length : '...'})
+                </div>
+            </div>
+
+            {/* Вывод списка треков */}
             {isLoading ? (
                 <div style={{ textAlign: 'center', color: 'white', padding: '3rem 0' }}>
-                    Loading tracks...
+                    Loading profile data...
                 </div>
-            ) : midis.length === 0 ? (
+            ) : tracks.length === 0 ? (
                 <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '3rem 0' }}>
-                    {/* Динамическое сообщение, если ничего не найдено */}
-                    {searchQuery
-                        ? `No tracks found for "${searchQuery}" in ${activeTab}.`
-                        : activeTab === 'trending'
-                            ? "No trending tracks in the last 14 days. Be the first to hype something up!"
-                            : "No tracks found."}
+                    {activeTab === 'uploads'
+                        ? "You haven't uploaded any MIDI files yet."
+                        : "You haven't liked any tracks yet."}
                 </div>
             ) : (
                 <>
@@ -104,6 +150,7 @@ export default function MainPage() {
                         ))}
                     </div>
 
+                    {/* Пагинация */}
                     {totalPages > 1 && (
                         <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '3rem', paddingBottom: '2rem' }}>
                             <button

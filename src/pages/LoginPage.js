@@ -47,7 +47,7 @@ export default function LoginPage() {
 
                 <form className="auth-form" onSubmit={handleSubmit}>
                     <div className="auth-input-group">
-                        <label>Email or Username</label>
+                        <label>Email</label>
                         <input type="text" name="email" className="auth-input" placeholder="example@email.com" required value={formData.email} onChange={handleChange} />
                     </div>
 

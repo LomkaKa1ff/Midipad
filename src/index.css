@@ -14,6 +14,7 @@ body {
   margin: 0;
   font-family: system-ui, -apple-system, sans-serif;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 * {
@@ -535,11 +536,13 @@ button {
 }
 
 /* =========================================
-   Auth Pages (Стиль чистого экрана логина)
+   Auth Pages (Крупный текст + Компактная карточка)
 ========================================= */
 .auth-page-container {
   width: 100vw;
   min-height: 100vh;
+  /* Динамика: мягкое белое свечение сверху по центру, уходящее в черный фон */
+  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08) 0%, #0a0a0a 70%);
   background-color: #0a0a0a;
   display: flex;
   justify-content: center;
@@ -556,7 +559,7 @@ button {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
   transition: color 0.2s;
 }
 
@@ -566,57 +569,67 @@ button {
 
 .auth-card {
   width: 100%;
-  max-width: 420px;
-  background: rgba(15, 15, 15, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  max-width: 440px; /* Вернули компактную ширину */
+  background: rgba(15, 15, 15, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
-  padding: 2.5rem;
+  padding: 2.5rem 2rem; /* Немного уменьшили внутренние отступы */
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 .auth-card h1 {
   color: white;
   text-align: center;
-  margin-bottom: 2rem;
-  font-size: 1.8rem;
-  font-weight: 600;
+  margin-bottom: 2rem; /* Слегка уменьшили отступ под заголовком */
+  font-size: 2.2rem;
+  font-weight: 700;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1.2rem; /* Чуть сблизили поля */
 }
 
 .auth-input-group label {
-  color: #a0a0a0;
-  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
   margin-bottom: 0.4rem;
   display: block;
 }
 
+.required {
+  color: #ff5555;
+  margin-left: 4px;
+}
+
 .auth-input {
   width: 100%;
-  background: #0f0f0f;
-  border: 1px solid #222;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
-  padding: 0.9rem 1rem;
+  padding: 0.9rem 1rem; /* Сделали поля чуть менее высокими */
   border-radius: 8px;
   outline: none;
+  font-size: 1rem;
   transition: all 0.2s;
 }
 
 .auth-input:focus {
-  border-color: #444;
-  background: #151515;
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .auth-error {
   color: #ff5555;
   background: rgba(255, 85, 85, 0.1);
-  padding: 0.75rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
   text-align: center;
+  margin-bottom: 1.2rem;
 }
 
 .btn-auth-submit {
@@ -624,40 +637,41 @@ button {
   background: white;
   color: black;
   border: none;
-  padding: 0.9rem;
+  padding: 0.9rem; /* Кнопка чуть компактнее, но всё еще массивная */
   border-radius: 8px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.1rem;
   cursor: pointer;
   margin-top: 0.5rem;
   transition: opacity 0.2s;
 }
 
 .btn-auth-submit:hover {
-  opacity: 0.9;
+  opacity: 0.8;
 }
 
 .auth-divider {
   display: flex;
   align-items: center;
   text-align: center;
-  color: #555;
-  font-size: 0.8rem;
-  margin: 1.5rem 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 1.5rem 0; /* Уменьшили отступы вокруг OR */
 }
 
 .auth-divider::before,
 .auth-divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .auth-divider:not(:empty)::before {
-  margin-right: .5em;
+  margin-right: 1em;
 }
 
 .auth-divider:not(:empty)::after {
-  margin-left: .5em;
+  margin-left: 1em;
 }
 
 .btn-discord {
@@ -668,6 +682,7 @@ button {
   padding: 0.9rem;
   border-radius: 8px;
   font-weight: 600;
+  font-size: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -686,15 +701,450 @@ button {
   flex-direction: column;
   gap: 0.8rem;
   text-align: center;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
 }
 
 .auth-footer a {
-  color: #a0a0a0;
+  color: var(--text-muted);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .auth-footer a:hover {
   color: white;
+  text-decoration: underline;
+}
+
+/* =========================================
+   Modal (Окно загрузки MIDI)
+========================================= */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: rgba(15, 15, 15, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: white;
+}
+
+.file-drop-area {
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 1.5rem;
+}
+
+.file-drop-area:hover, .file-drop-area.active {
+  border-color: white;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.file-drop-area p {
+  margin: 0.5rem 0 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.file-name-display {
+  color: #A7EF9E; /* Зеленый цвет для успешного выбора */
+  font-weight: 600;
+  word-break: break-all;
+}
+
+/* =========================================
+   Bottom Player (С кастомным ползунком)
+========================================= */
+.bottom-player-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 95px;
+  background: #121212;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+  padding-bottom: 20px; /* Приподнимаем контент, чтобы освободить низ для полосы */
+  z-index: 9999;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  box-sizing: border-box;
+}
+
+.bp-section {
+  display: flex;
+  align-items: center;
+}
+
+.bp-left, .bp-right {
+  width: 30%;
+}
+
+.bp-left {
+  gap: 1rem;
+}
+
+.bp-right {
+  justify-content: flex-end;
+  gap: 1.5rem;
+}
+
+.bp-center {
+  width: 40%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.bp-controls-row {
+  display: flex;
+  justify-content: center; /* Центрируем всё */
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%; /* Растягиваем, чтобы центр был ровно по центру */
+}
+
+/* Обложка и текст */
+.bp-cover {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bp-text h4 {
+  color: white;
+  margin: 0 0 0.2rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.bp-text p {
+  color: #a0a0a0;
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+/* Кнопки */
+.bp-icon-btn {
+  background: transparent;
+  border: none;
+  color: #a0a0a0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, transform 0.1s;
+  padding: 0;
+}
+
+.bp-icon-btn:hover {
+  color: white;
+  transform: scale(1.1);
+}
+
+.bp-close-btn {
+  margin-left: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px;
+  border-radius: 50%;
+}
+
+/* --- Настоящий микшер громкости --- */
+.bp-volume-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bp-volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 80px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.bp-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.bp-volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* =========================================
+   НАШ КАСТОМНЫЙ ПРОГРЕСС-БАР И ТАЙМЕРЫ
+========================================= */
+.bp-progress-wrapper {
+  position: absolute;
+  bottom: 8px; /* Ровно прибиваем к низу враппера */
+  left: 0;
+  width: 100vw;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-sizing: border-box;
+}
+
+.bp-time-current, .bp-time-total {
+  font-size: 0.75rem;
+  color: #a0a0a0;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-weight: 500;
+  width: 35px; /* Фиксируем ширину, чтобы бар не дергался, когда цифры меняются */
+  text-align: center;
+}
+
+/* Наш кастомный ползунок прогресса */
+.bp-custom-slider {
+  -webkit-appearance: none;
+  flex: 1; /* Растягивает полосу на всё свободное место между таймерами */
+  height: 4px;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  transition: height 0.1s;
+}
+
+/* Прячем дефолтный кружочек (thumb), оставляем только закрашенную линию */
+.bp-custom-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 0;
+  height: 0;
+}
+
+.bp-custom-slider:hover {
+  height: 6px;
+}
+
+/* =========================================
+   КАСТОМНАЯ КНОПКА PLAY И НЕВИДИМЫЙ ПЛЕЕР
+========================================= */
+/* Прячем гугловского монстра навсегда */
+.hidden-midi-player {
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+/* Наша идеальная React-кнопка (Uwupad Style) */
+/* Максимальный приоритет для кнопки */
+.bp-custom-play-btn {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  background-color: white !important;
+  color: black !important;
+  border-radius: 12px !important;
+  border: none !important;
+
+  /* ЦЕНТРИРОВАНИЕ ИКОНКИ */
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transition: transform 0.1s, background-color 0.1s !important;
+}
+
+/* На случай, если библиотека иконок добавляет свои отступы */
+.bp-custom-play-btn svg {
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+.bp-custom-play-btn:hover {
+  transform: scale(1.05);
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Разделитель между элементами в карточке */
+.stats-divider {
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 8px;
+}
+
+/* Эффект при клике на лайк */
+.heart-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.heart-btn.liked { color: #ff5555; }
+.heart-btn:hover { color: white; }
+
+/* КАСТОМИЗАЦИЯ TOAST-УВЕДОМЛЕНИЙ */
+.custom-toast {
+  background: linear-gradient(145deg, #1e1e1e, #141414) !important; /* Темный градиент */
+  color: #ffffff !important;
+  border-radius: 10px !important; /* Скругленные углы */
+  font-family: monospace, sans-serif !important; /* Моноширинный шрифт как на скрине */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6) !important;
+  padding: 16px !important;
+}
+
+/* Красная полоска прогресса внизу */
+.Toastify__progress-bar--error {
+  background: #ff5555 !important;
+  height: 4px !important;
+}
+
+/* Иконка ошибки (делаем красной) */
+.Toastify__toast-icon {
+  width: 24px;
+  height: 24px;
+}
+.Toastify__toast-icon svg {
+  fill: #ff5555 !important;
+}
+
+/* Кнопка закрытия (крестик) */
+.Toastify__close-button {
+  color: #fff !important;
+  opacity: 0.6;
+  align-self: center;
+}
+.Toastify__close-button:hover {
+  opacity: 1;
+}
+
+/* Зеленая полоска прогресса для успешных тоастов */
+.Toastify__progress-bar--success {
+  background: #00ffcc !important; /* Яркий кибер-зелёный под стать общему стилю */
+  height: 4px !important;
+}
+
+/* Иконка успешного уведомления */
+.Toastify__toast--success .Toastify__toast-icon svg {
+  fill: #00ffcc !important;
+}
+
+/* --- UI КОСМЕТИКА ДЛЯ КОММЕНТАРИЕВ --- */
+
+/* Стили для бокса комментария (Обновление) */
+.comments-section .comment-box {
+  background-color: #0c0c0c !important; /* Светлее, чем было (#1a1a1a -> #2a2a2a) */
+  border-radius: 8px;
+  padding: 1.5rem; /* Больше пространства */
+  border: 1px solid rgba(255,255,255,0.05);
+  display: flex; /* Flex container для контента и кнопки */
+  justify-content: space-between; /* Разносим контент и кнопку по краям */
+  align-items: flex-start;
+  gap: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+/* Эффект наведения на весь бокс (опционально, для оглядности) */
+.comments-section .comment-box:hover {
+  background-color: #1e1e1e !important;
+}
+
+/* Стили для кнопки удаления (корзины), которая будет СПРАВА */
+.comment-box .comment-delete-btn {
+  background: none;
+  border: none;
+  color: #666; /* Изначально серый цвет */
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.2rem;
+  align-self: center; /* Центрируем иконку по вертикали */
+  opacity: 0.6;
+  transition: all 0.2s ease;
+}
+
+/* КРАСНЫЙ ховер эффект для мусорки */
+.comment-box .comment-delete-btn:hover {
+  color: #ff5555 !important; /* Насыщенный красный */
+  transform: scale(1.1); /* Слегка увеличиваем */
+  opacity: 1; /* Полная видимость */
+}
+
+/* --- ЦВЕТА УВЕДОМЛЕНИЙ (Toastify) --- */
+/* (На всякий случай подтверждаем, что они правильные) */
+
+.Toastify__toast--success {
+  background: #2a2a2a;
+  color: #fff;
+  border-radius: 8px;
+  font-family: monospace;
+}
+.Toastify__progress-bar--success {
+  background: #00ffcc !important; /* Кибер-зелёный */
+}
+.Toastify__toast--error {
+  background: #2a2a2a;
+  color: #fff;
+  border-radius: 8px;
+  font-family: monospace;
+}
+.Toastify__progress-bar--error {
+  background: #ff5555 !important; /* Красный */
 }
