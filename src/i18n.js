@@ -23,7 +23,14 @@ const resources = {
             "password": "Password",
             "confirm_password": "Confirm Password",
             "sign_up": "Sign Up",
-            "already_have_account": "Already have an account?"
+            "already_have_account": "Already have an account?",
+
+            "nav_about": "About Us",
+            "nav_rules": "Rules & DMCA",
+            "nav_contacts": "Contacts",
+            "search_placeholder": "Search MIDI...",
+            "log_in": "Log In",
+            "log_out": "Log out"
         }
     },
     ru: {
@@ -46,7 +53,14 @@ const resources = {
             "password": "Пароль",
             "confirm_password": "Подтвердите пароль",
             "sign_up": "Зарегистрироваться",
-            "already_have_account": "Уже есть аккаунт?"
+            "already_have_account": "Уже есть аккаунт?",
+
+            "nav_about": "О нас",
+            "nav_rules": "Правила и DMCA",
+            "nav_contacts": "Контакты",
+            "search_placeholder": "Поиск MIDI...",
+            "log_in": "Войти",
+            "log_out": "Выйти"
         }
     }
 };

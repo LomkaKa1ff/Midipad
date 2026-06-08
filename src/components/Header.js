@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from 'react'; // Добавили useEffect
+import React, { useState, useEffect } from 'react';
 import { Search, UploadCloud, LogIn, User, LogOut } from 'lucide-react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'; // Добавили useSearchParams
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Подключили переводчик
 import UploadModal from './UploadModal';
 import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Header() {
+    const { t } = useTranslation(); // Достали функцию перевода
     const navigate = useNavigate();
 
     // --- ЛОГИКА ПОИСКА ---
     const [searchParams] = useSearchParams();
     const currentSearch = searchParams.get('search') || '';
-    const currentSort = searchParams.get('sort') || 'trending'; // Сохраняем активную вкладку
+    const currentSort = searchParams.get('sort') || 'trending';
 
     const [inputValue, setInputValue] = useState(currentSearch);
 
-    // Если URL изменился извне (например, клик по логотипу), обновляем инпут
     useEffect(() => {
         setInputValue(currentSearch);
     }, [currentSearch]);
@@ -22,10 +23,8 @@ export default function Header() {
     const handleSearch = (e) => {
         if (e.key === 'Enter') {
             if (inputValue.trim() === '') {
-                // Если пусто — просто оставляем сортировку
                 navigate(`/?sort=${currentSort}`);
             } else {
-                // Если есть текст — добавляем параметр search
                 navigate(`/?sort=${currentSort}&search=${encodeURIComponent(inputValue.trim())}`);
             }
         }
@@ -54,24 +53,22 @@ export default function Header() {
     return (
         <header className="header">
             <div className="header-left">
-                {/* Если кликаем по логотипу, скидываем все параметры и возвращаем на главную */}
                 <Link to="/" className="logo-container" onClick={() => setInputValue('')}>
                     <img src="/midipadLogo.png" alt="MidiPad Logo" className="logo-image" />
                     <span className="logo-text">MidiPad</span>
                 </Link>
                 <nav className="header-nav">
-                    <Link to="/about" className="header-link">About Us</Link>
-                    <Link to="/dmca" className="header-link">Rules & DMCA</Link>
-                    <Link to="/contacts" className="header-link">Contacts</Link>
+                    <Link to="/about" className="header-link">{t('nav_about')}</Link>
+                    <Link to="/dmca" className="header-link">{t('nav_rules')}</Link>
+                    <Link to="/contacts" className="header-link">{t('nav_contacts')}</Link>
                 </nav>
             </div>
 
-            {/* ОЖИВЛЕННЫЙ ПОИСК */}
             <div className="search-container">
                 <Search className="search-icon" size={18} />
                 <input
                     type="text"
-                    placeholder="Search MIDI..."
+                    placeholder={t('search_placeholder')}
                     className="search-input"
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
@@ -79,12 +76,15 @@ export default function Header() {
                 />
             </div>
 
-            <LanguageSwitcher />
+            {/* Добавили flex и gap для аккуратного выравнивания */}
+            <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
 
-            <div className="header-actions">
+                {/* Флаг теперь внутри блока с кнопками, слева от загрузки */}
+                <LanguageSwitcher />
+
                 <button className="btn btn-primary" onClick={handleUploadClick}>
                     <UploadCloud size={18} />
-                    Upload MIDI
+                    {t('upload_midi')}
                 </button>
 
                 {user ? (
@@ -93,14 +93,14 @@ export default function Header() {
                             <User size={18} />
                             {user.username}
                         </Link>
-                        <button onClick={handleLogout} className="btn btn-secondary" style={{ display: 'flex', padding: '0.5rem', border: 'none', color: '#ff5555' }} title="Log out">
+                        <button onClick={handleLogout} className="btn btn-secondary" style={{ display: 'flex', padding: '0.5rem', border: 'none', color: '#ff5555' }} title={t('log_out')}>
                             <LogOut size={18} />
                         </button>
                     </div>
                 ) : (
                     <Link to="/login" className="btn btn-secondary" style={{ display: 'flex', textDecoration: 'none' }}>
                         <LogIn size={18} />
-                        Log In
+                        {t('log_in')}
                     </Link>
                 )}
             </div>
