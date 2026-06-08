@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import MidiCard from '../components/MidiCard';
 import FaultyTerminal from '../components/backgrounds/FaultyTerminal';
+import { useTranslation } from 'react-i18next'; // 1. ДОБАВИЛИ ИМПОРТ
 
 export default function MainPage() {
     const [searchParams] = useSearchParams();
+    const { t } = useTranslation(); // 2. ДОСТАЛИ ФУНКЦИЮ t()
 
     const activeTab = searchParams.get('sort') || 'trending';
-    // ЧИТАЕМ ПАРАМЕТР ПОИСКА ИЗ URL
     const searchQuery = searchParams.get('search') || '';
 
     const [midis, setMidis] = useState([]);
@@ -16,7 +17,6 @@ export default function MainPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const tracksPerPage = 16;
 
-    // Сбрасываем на 1 страницу, если сменили вкладку ИЛИ ввели новый поиск
     useEffect(() => {
         setCurrentPage(1);
     }, [activeTab, searchQuery]);
@@ -25,7 +25,6 @@ export default function MainPage() {
         const fetchMidis = async () => {
             setIsLoading(true);
             try {
-                // ФИКС: Отправляем на бэкенд и сортировку, и поисковой запрос
                 const response = await fetch(`http://localhost:5000/api/midi?sort=${activeTab}&search=${searchQuery}`);
                 const data = await response.json();
 
@@ -40,7 +39,7 @@ export default function MainPage() {
         };
 
         fetchMidis();
-    }, [activeTab, searchQuery]); // Эффект перезапускается при любом изменении в URL
+    }, [activeTab, searchQuery]);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -77,24 +76,24 @@ export default function MainPage() {
 
             <div className="mb-large text-center">
                 <h1 className="title-main">
-                    Upload, download, and listen to <br/>
-                    <span className="title-gradient">MIDI music without limits.</span>
+                    {t('main_title_1')} <br/>
+                    <span className="title-gradient">{t('main_title_2')}</span>
                 </h1>
-                <p className="text-muted">A shared database of melodies for your favorite games.</p>
+                <p className="text-muted">{t('main_subtitle')}</p>
             </div>
 
             {isLoading ? (
                 <div style={{ textAlign: 'center', color: 'white', padding: '3rem 0' }}>
-                    Loading tracks...
+                    {t('loading_tracks')}
                 </div>
             ) : midis.length === 0 ? (
                 <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '3rem 0' }}>
-                    {/* Динамическое сообщение, если ничего не найдено */}
+                    {/* Передаем переменные прямо в переводчик! */}
                     {searchQuery
-                        ? `No tracks found for "${searchQuery}" in ${activeTab}.`
+                        ? t('no_tracks_search', { query: searchQuery, tab: activeTab })
                         : activeTab === 'trending'
-                            ? "No trending tracks in the last 14 days. Be the first to hype something up!"
-                            : "No tracks found."}
+                            ? t('no_trending')
+                            : t('no_tracks')}
                 </div>
             ) : (
                 <>
@@ -112,7 +111,7 @@ export default function MainPage() {
                                 disabled={currentPage === 1}
                                 style={{ padding: '0.5rem 1rem', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', opacity: currentPage === 1 ? 0.5 : 1 }}
                             >
-                                &laquo; Back
+                                &laquo; {t('btn_back')}
                             </button>
 
                             {[...Array(totalPages)].map((_, index) => {
@@ -142,7 +141,7 @@ export default function MainPage() {
                                 disabled={currentPage === totalPages}
                                 style={{ padding: '0.5rem 1rem', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', opacity: currentPage === totalPages ? 0.5 : 1 }}
                             >
-                                Next &raquo;
+                                {t('btn_next')} &raquo;
                             </button>
                         </div>
                     )}

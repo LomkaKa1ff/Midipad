@@ -15,6 +15,9 @@ export default function RegisterPage() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
+    // --- 1. ДОБАВЛЕН СТЕЙТ ДЛЯ ГАЛОЧКИ ---
+    const [agreed, setAgreed] = useState(false);
+
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const handleSubmit = async (e) => {
@@ -23,7 +26,12 @@ export default function RegisterPage() {
 
         const { username, email, password, confirmPassword } = formData;
 
-        // ПРОВЕРКИ
+        // --- 2. ПРОВЕРКА СОГЛАШЕНИЯ ---
+        if (!agreed) {
+            return setError('You must agree to the Terms of Service and Privacy Policy.');
+        }
+
+        // ОСТАЛЬНЫЕ ПРОВЕРКИ
         if (username.length < 3 || username.length > 16) {
             return setError('Username must be between 3 and 16 characters.');
         }
@@ -111,11 +119,38 @@ export default function RegisterPage() {
                         <input type="password" name="confirmPassword" className="auth-input" placeholder="••••••••" required value={formData.confirmPassword} onChange={handleChange} />
                     </div>
 
+                    {/* --- 3. БЛОК СОГЛАШЕНИЯ (GDPR / ПЕРСОНАЛЬНЫЕ ДАННЫЕ) --- */}
+                    <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '1rem', marginTop: '1rem', marginBottom: '0.5rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.8rem' }}>
+                            <input
+                                type="checkbox"
+                                id="register-terms"
+                                checked={agreed}
+                                onChange={(e) => { setAgreed(e.target.checked); setError(''); }}
+                                style={{ marginTop: '0.2rem', cursor: 'pointer', width: '16px', height: '16px', accentColor: '#00ffcc' }}
+                            />
+                            <div>
+                                <label htmlFor="register-terms" style={{ color: '#e0e0e0', fontSize: '0.9rem', cursor: 'pointer' }}>
+                                    I agree to the <a href="/terms" style={{ color: '#fff', textDecoration: 'underline' }}>Terms of Service</a> and <a href="/privacy" style={{ color: '#fff', textDecoration: 'underline' }}>Privacy Policy</a>.
+                                </label>
+                                <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', margin: '0.4rem 0 0 0', lineHeight: '1.4' }}>
+                                    We collect and process your data strictly to provide the service. We do not sell your personal information to third parties.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div style={{ height: '60px', background: '#111', border: '1px solid #333', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555', fontSize: '0.8rem', marginTop: '0.5rem' }}>
                         Cloudflare Turnstile Captcha Placeholder
                     </div>
 
-                    <button type="submit" className="btn-auth-submit" disabled={isLoading}>
+                    {/* --- 4. БЛОКИРОВКА КНОПКИ ПРИ ОТСУТСТВИИ ГАЛОЧКИ --- */}
+                    <button
+                        type="submit"
+                        className="btn-auth-submit"
+                        disabled={isLoading || !agreed}
+                        style={{ opacity: (!agreed) ? 0.5 : 1, cursor: (!agreed) ? 'not-allowed' : 'pointer', transition: 'all 0.2s ease' }}
+                    >
                         {isLoading ? 'Creating...' : 'Create Account'}
                     </button>
                 </form>

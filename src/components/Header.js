@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'; // Добавили useEffec
 import { Search, UploadCloud, LogIn, User, LogOut } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'; // Добавили useSearchParams
 import UploadModal from './UploadModal';
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Header() {
     const navigate = useNavigate();
@@ -77,6 +78,8 @@ export default function Header() {
                     onKeyDown={handleSearch}
                 />
             </div>
+
+            <LanguageSwitcher />
 
             <div className="header-actions">
                 <button className="btn btn-primary" onClick={handleUploadClick}>

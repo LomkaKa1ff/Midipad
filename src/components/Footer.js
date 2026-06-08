@@ -29,7 +29,7 @@ export default function Footer() {
 
                 <div className="footer-col">
                     <h3>Links</h3>
-                    <a href="/">Donate</a>
+                    <a href="/frontend/public">Donate</a>
                 </div>
 
                 <div className="footer-col">

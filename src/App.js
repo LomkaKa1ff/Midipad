@@ -4,6 +4,8 @@ import { ToastContainer } from 'react-toastify'; // ИМПОРТ ТОАСТОВ
 import 'react-toastify/dist/ReactToastify.css'; // ИМПОРТ БАЗОВЫХ СТИЛЕЙ ТОАСТОВ
 import ProfilePage from './pages/ProfilePage';
 import TrackPage from './pages/TrackPage';
+import TagPage from './pages/TagPage';
+import './i18n';
 
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -53,6 +55,7 @@ function App() {
                     <Route path="/privacy" element={<PrivacyPage />} />
                     <Route path="/terms" element={<TermsPage />} />
                     <Route path="/track/:id" element={<TrackPage />} />
+                    <Route path="/tag/:tag" element={<TagPage />} />
                 </Route>
             </Routes>
         </BrowserRouter>
