@@ -4,7 +4,8 @@ import { Heart, Download, Share2, Music, X, SkipBack, SkipForward, Volume2, Volu
 import { toast } from 'react-toastify';
 
 export default function BottomPlayer() {
-    const { currentTrack, playTrack, updateCurrentTrack } = usePlayer();
+    // 1. ДОСТАЛИ playNext, playPrev И playlist ИЗ КОНТЕКСТА
+    const { currentTrack, playTrack, updateCurrentTrack, playNext, playPrev, playlist = [] } = usePlayer();
     const playerRef = useRef(null);
 
     const token = localStorage.getItem('token');
@@ -27,12 +28,15 @@ export default function BottomPlayer() {
     const isLiked = userId && currentTrack?.likedBy ? currentTrack.likedBy.some(id => String(id) === String(userId)) : false;
     const trackIdForAudio = currentTrack ? (currentTrack._id || currentTrack.id) : null;
 
+    // 2. ОПРЕДЕЛЯЕМ, ЕСТЬ ЛИ СЛЕДУЮЩИЙ И ПРЕДЫДУЩИЙ ТРЕК
+    const currentIndex = playlist.findIndex(t => String(t._id || t.id) === String(trackIdForAudio));
+    const hasPrev = currentIndex > 0;
+    const hasNext = currentIndex !== -1 && currentIndex < playlist.length - 1;
+
     useEffect(() => {
         if (!trackIdForAudio || !playerRef.current) return;
         const player = playerRef.current;
 
-        // --- ИДЕАЛЬНЫЙ АВТОПЛЕЙ БЕЗ ОШИБОК ---
-        // Ждем, пока плеер сам скачает файл и шрифты, и только потом запускаем
         const handleLoad = () => {
             try {
                 if (window.Tone && window.Tone.Destination) {
@@ -46,22 +50,18 @@ export default function BottomPlayer() {
             }
         };
 
-        // Подписываемся на событие загрузки
         player.addEventListener('load', handleLoad);
 
-        // Если файл закэширован и уже готов - запускаем сразу
         if (player.duration > 0) {
             handleLoad();
         }
 
-        // Таймер прослушивания (3 сек)
         const listenTimer = setTimeout(async () => {
             try {
                 await fetch(`http://localhost:5000/api/midi/listen/${trackIdForAudio}`, { method: 'POST' });
             } catch (e) { console.error("Ошибка при учете прослушивания", e); }
         }, 3000);
 
-        // Главный цикл UI (только обновляет цифры, ничего не ломает)
         const timeInterval = setInterval(() => {
             if (player) {
                 setIsPlaying(!!player.playing);
@@ -77,24 +77,32 @@ export default function BottomPlayer() {
 
                 setCurrentTime(formatTime(curr));
                 setDuration(formatTime(dur));
-                if (dur > 0) setProgress((curr / dur) * 100);
+
+                if (dur > 0) {
+                    setProgress((curr / dur) * 100);
+
+                    // 3. АВТОПЕРЕКЛЮЧЕНИЕ НА СЛЕДУЮЩИЙ ТРЕК ПРИ ЗАВЕРШЕНИИ (за 0.2 сек до конца)
+                    if (curr >= dur - 0.2 && hasNext) {
+                        playNext();
+                    }
+                }
             }
         }, 100);
 
         return () => {
             clearTimeout(listenTimer);
             clearInterval(timeInterval);
-            player.removeEventListener('load', handleLoad); // Отписываемся от события
+            player.removeEventListener('load', handleLoad);
 
             try {
-                player.stop(); // Мягко останавливаем старый трек
+                player.stop();
                 if (window.Tone && window.Tone.Destination) {
                     window.Tone.Destination.mute = true;
                     window.Tone.Destination.volume.value = -100;
                 }
             } catch (err) { console.error("Cleanup error:", err); }
         };
-    }, [trackIdForAudio]);
+    }, [trackIdForAudio, hasNext, playNext, volume]); // Добавили зависимости
 
     const handleLike = async (e) => {
         e.stopPropagation();
@@ -104,8 +112,7 @@ export default function BottomPlayer() {
         }
 
         try {
-            const trackId = currentTrack._id || currentTrack.id;
-            const res = await fetch(`http://localhost:5000/api/midi/like/${trackId}`, {
+            const res = await fetch(`http://localhost:5000/api/midi/like/${trackIdForAudio}`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -121,10 +128,7 @@ export default function BottomPlayer() {
                 }
 
                 if (updateCurrentTrack) {
-                    updateCurrentTrack({
-                        likes: result.likes,
-                        likedBy: updatedLikedBy
-                    });
+                    updateCurrentTrack({ likes: result.likes, likedBy: updatedLikedBy });
                 }
             }
         } catch (err) { console.error("Ошибка лайка:", err); }
@@ -174,14 +178,9 @@ export default function BottomPlayer() {
         setVolume(newMuted ? 0 : targetVol);
     };
 
-    // --- ЛОГИКА ШЕРИНГА ССЫЛКИ ---
     const handleShare = (e) => {
         e.stopPropagation();
-        const trackId = currentTrack._id || currentTrack.id;
-
-        // Формируем полную ссылку на трек с учетом текущего домена
-        const shareUrl = `${window.location.origin}/track/${trackId}`;
-
+        const shareUrl = `${window.location.origin}/track/${trackIdForAudio}`;
         navigator.clipboard.writeText(shareUrl)
             .then(() => toast.success("Link copied to clipboard!"))
             .catch(() => toast.error("Failed to copy link"));
@@ -190,7 +189,7 @@ export default function BottomPlayer() {
     if (!currentTrack) return null;
 
     const fileUrl = `http://localhost:5000/uploads/${currentTrack.filename}`;
-    const downloadUrl = `http://localhost:5000/api/midi/download/${currentTrack._id || currentTrack.id}`;
+    const downloadUrl = `http://localhost:5000/api/midi/download/${trackIdForAudio}`;
 
     return (
         <div className="bottom-player-wrapper">
@@ -204,12 +203,20 @@ export default function BottomPlayer() {
 
             <div className="bp-section bp-center">
                 <div className="bp-controls-row">
-                    <button className="bp-icon-btn"><SkipBack size={20} fill="currentColor" /></button>
+                    {/* 4. ОЖИВИЛИ КНОПКУ PREV */}
+                    <button
+                        className="bp-icon-btn"
+                        onClick={playPrev}
+                        disabled={!hasPrev}
+                        style={{ color: hasPrev ? 'inherit' : 'rgba(255,255,255,0.2)', cursor: hasPrev ? 'pointer' : 'not-allowed' }}
+                    >
+                        <SkipBack size={20} fill="currentColor" />
+                    </button>
+
                     <button className="bp-custom-play-btn" onClick={togglePlay}>
                         {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" />}
                     </button>
 
-                    {/* ФИКС: УБРАЛИ KEY, ЧТОБЫ КОМПОНЕНТ НЕ УНИЧТОЖАЛСЯ И НЕ РВАЛ ЗАГРУЗКУ ШРИФТОВ */}
                     <midi-player
                         ref={playerRef}
                         src={fileUrl}
@@ -217,7 +224,15 @@ export default function BottomPlayer() {
                         className="hidden-midi-player"
                     ></midi-player>
 
-                    <button className="bp-icon-btn"><SkipForward size={20} fill="currentColor" /></button>
+                    {/* 5. ОЖИВИЛИ КНОПКУ NEXT */}
+                    <button
+                        className="bp-icon-btn"
+                        onClick={playNext}
+                        disabled={!hasNext}
+                        style={{ color: hasNext ? 'inherit' : 'rgba(255,255,255,0.2)', cursor: hasNext ? 'pointer' : 'not-allowed' }}
+                    >
+                        <SkipForward size={20} fill="currentColor" />
+                    </button>
                 </div>
             </div>
 
@@ -232,7 +247,6 @@ export default function BottomPlayer() {
 
                 <a href={downloadUrl} className="bp-icon-btn" title="Download"><Download size={18} /></a>
 
-                {/* ОЖИВЛЕННАЯ КНОПКА SHARE */}
                 <button className="bp-icon-btn" onClick={handleShare} title="Share link">
                     <Share2 size={18} />
                 </button>

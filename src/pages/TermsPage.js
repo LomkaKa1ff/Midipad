@@ -4,7 +4,7 @@ export default function TermsPage() {
     return (
         <div className="text-content">
             <h1>Terms of Use</h1>
-            <p><strong>Effective Date:</strong> 03/28/2024 | <strong>Last Updated:</strong> 03/10/2025</p>
+            <p><strong>Effective Date:</strong> 06/08/2026 | <strong>Last Updated:</strong> 06/08/2026</p>
 
             <p>By accessing the Site, you are agreeing to these Terms. You should be at least 13 years of age to access the Site. If you disagree with any provisions of these Terms, do not access or use the Site.</p>
 

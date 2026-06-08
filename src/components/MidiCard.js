@@ -4,7 +4,7 @@ import { usePlayer } from '../context/PlayerContext';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-export default function MidiCard({ data, onDeleteClick }) {
+export default function MidiCard({ data, onDeleteClick, playlist }) {
     const { playTrack, currentTrack, updateCurrentTrack } = usePlayer();
 
     const token = localStorage.getItem('token');
@@ -42,7 +42,7 @@ export default function MidiCard({ data, onDeleteClick }) {
 
     const handleTogglePlay = (e) => {
         e.stopPropagation();
-        isCurrentTrack ? playTrack(null) : playTrack(data);
+        isCurrentTrack ? playTrack(null) : playTrack(data, playlist || []);
     };
 
     const handleLike = async (e) => {

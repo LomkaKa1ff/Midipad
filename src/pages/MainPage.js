@@ -99,7 +99,7 @@ export default function MainPage() {
                 <>
                     <div className="midi-grid">
                         {currentTracks.map(midi => (
-                            <MidiCard key={midi._id || midi.id} data={midi} />
+                            <MidiCard key={midi._id || midi.id} data={midi} playlist={currentTracks} />
                         ))}
                     </div>
 

@@ -4,7 +4,7 @@ export default function PrivacyPage() {
     return (
         <div className="text-content">
             <h1>Privacy Policy</h1>
-            <p><strong>Effective Date:</strong> 06/05/2026 | <strong>Last Updated:</strong> 06/05/2026</p>
+            <p><strong>Effective Date:</strong> 06/08/2026 | <strong>Last Updated:</strong> 06/08/2026</p>
 
             <p>This Privacy Policy document outlines the types of information that are collected and recorded by <strong>MidiPad</strong> and how we use it. By using our website, you hereby consent to our Privacy Policy and agree to its terms!</p>
 

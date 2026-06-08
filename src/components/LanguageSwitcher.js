@@ -2,14 +2,17 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 export default function LanguageSwitcher() {
+    // Теперь i18n 100% будет содержать функцию changeLanguage
     const { i18n } = useTranslation();
 
+    // Защита от undefined при первой миллисекунде загрузки
+    const currentLang = i18n.language || window.localStorage.getItem('i18nextLng') || 'en';
+    const isRu = currentLang.startsWith('ru');
+
     const toggleLanguage = () => {
-        const nextLang = i18n.language.startsWith('ru') ? 'en' : 'ru';
+        const nextLang = isRu ? 'en' : 'ru';
         i18n.changeLanguage(nextLang);
     };
-
-    const isRu = i18n.language.startsWith('ru');
 
     return (
         <button
@@ -19,14 +22,14 @@ export default function LanguageSwitcher() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px', // Отступ между флагом и текстом
+                gap: '8px',
                 background: 'rgba(255,255,255,0.05)',
                 border: '1px solid rgba(255,255,255,0.1)',
                 color: 'var(--text-muted)',
-                padding: '0.55rem 0.8rem', // Идеальные отступы для совпадения по высоте
+                padding: '0.55rem 0.8rem',
                 borderRadius: '8px',
                 cursor: 'pointer',
-                fontSize: '0.9rem', // Чуть уменьшили текст, чтобы совпадал с кнопками
+                fontSize: '0.9rem',
                 fontWeight: '600',
                 transition: 'all 0.2s ease',
                 fontFamily: 'inherit'
@@ -40,7 +43,6 @@ export default function LanguageSwitcher() {
                 e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
             }}
         >
-            {/* Настоящие картинки флагов вместо эмодзи */}
             <img
                 src={isRu ? "https://flagcdn.com/w20/ru.png" : "https://flagcdn.com/w20/us.png"}
                 alt={isRu ? "RU Flag" : "US Flag"}

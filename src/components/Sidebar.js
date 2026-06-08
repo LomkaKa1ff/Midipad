@@ -1,12 +1,13 @@
 import React from 'react';
 import { TrendingUp, Star, Clock } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function Sidebar() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
-    // ФИКС: Теперь если в URL ничего нет, по умолчанию берется 'trending'
     const activeTab = searchParams.get('sort') || 'trending';
 
     return (
@@ -16,21 +17,21 @@ export default function Sidebar() {
                     className={`nav-item ${activeTab === 'trending' ? 'active' : ''}`}
                     onClick={() => navigate('/?sort=trending')}
                 >
-                    <TrendingUp size={20} /> Trending
+                    <TrendingUp size={20} /> {t('trending')}
                 </div>
 
                 <div
                     className={`nav-item ${activeTab === 'popular' ? 'active' : ''}`}
                     onClick={() => navigate('/?sort=popular')}
                 >
-                    <Star size={20} /> Popular
+                    <Star size={20} /> {t('popular')}
                 </div>
 
                 <div
                     className={`nav-item ${activeTab === 'newest' ? 'active' : ''}`}
                     onClick={() => navigate('/?sort=newest')}
                 >
-                    <Clock size={20} /> Newest
+                    <Clock size={20} /> {t('newest')}
                 </div>
             </nav>
         </aside>
