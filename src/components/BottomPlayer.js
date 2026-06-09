@@ -221,6 +221,7 @@ export default function BottomPlayer() {
                         ref={playerRef}
                         src={fileUrl}
                         sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus"
+                        visualizer={`#visualizer-${trackIdForAudio}`}
                         className="hidden-midi-player"
                     ></midi-player>
 

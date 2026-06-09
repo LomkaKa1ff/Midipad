@@ -106,6 +106,9 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
         }
     };
 
+    // ФОРМИРУЕМ ССЫЛКУ НА ФАЙЛ ДЛЯ ВИЗУАЛИЗАТОРА
+    const fileUrl = `http://localhost:5000/uploads/${data.filename}`;
+
     return (
         <div className="midi-card" style={{ position: 'relative', padding: '1.2rem', display: 'flex', flexDirection: 'column' }}>
             {isAuthor && onDeleteClick && (
@@ -113,21 +116,9 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
                     onClick={handleDeleteClick}
                     title="Delete track"
                     style={{
-                        position: 'absolute',
-                        top: '12px',
-                        right: '12px',
-                        background: 'rgba(0,0,0,0.6)',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        borderRadius: '50%',
-                        width: '32px',
-                        height: '32px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'var(--text-muted)',
-                        cursor: 'pointer',
-                        zIndex: 10,
-                        transition: 'all 0.2s ease'
+                        position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '50%', width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: 'var(--text-muted)', cursor: 'pointer', zIndex: 10, transition: 'all 0.2s ease'
                     }}
                     onMouseEnter={(e) => { e.currentTarget.style.color = '#ff5555'; e.currentTarget.style.borderColor = '#ff5555'; e.currentTarget.style.transform = 'scale(1.1)'; }}
                     onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.transform = 'scale(1)'; }}
@@ -136,15 +127,36 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
                 </button>
             )}
 
-            <div className="piano-roll" style={{ marginBottom: '0.2rem' }}>
-                <div className="note" style={{ width: '40%', marginLeft: '10%' }}></div>
-                <div className="note glow" style={{ width: '60%', marginLeft: '20%' }}></div>
+            {/* 👇 ОЖИВШИЙ ЭКРАНЧИК С НОТАМИ 👇 */}
+            <div className="piano-roll" style={{
+                position: 'relative',
+                marginBottom: '0.8rem',
+                height: '80px', // Высота экранчика
+                background: '#111',
+                borderRadius: '8px',
+                overflow: 'hidden',
+                boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8)'
+            }}>
+                {/* НАСТОЯЩИЙ ВИЗУАЛИЗАТОР */}
+                <midi-visualizer
+                    id={`visualizer-${data._id || data.id}`}
+                    key={fileUrl}
+                    type="piano-roll"
+                    src={fileUrl}
+                    style={{ width: '100%', height: '100%', display: 'block' }}
+                    // 👇 ДЕЛАЕМ ИХ ЖИРНЫМИ И ПЛОТНЫМИ 👇
+                    note-height="5"    /* Увеличиваем толщину (по умолчанию 2) */
+                    note-spacing="1"   /* Оставляем зазор, чтобы не слипались */
+                ></midi-visualizer>
+
+                {/* ОВЕРЛЕЙ С КНОПКОЙ PLAY ПОВЕРХ ЭКРАНА */}
                 <div className="play-overlay">
                     <button className="play-btn" onClick={handleTogglePlay}>
                         {isCurrentTrack ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" />}
                     </button>
                 </div>
             </div>
+            {/* 👆 ---------------------------- 👆 */}
 
             <h3 className="card-title" title={data.title} style={{ margin: '0 0 0.3rem 0', fontSize: '1.2rem', lineHeight: '1.2' }}>
                 <Link to={`/track/${data._id || data.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
@@ -158,7 +170,6 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
                 <span>{new Date(data.createdAt).toLocaleDateString()}</span>
             </p>
 
-            {/* КЛИКАБЕЛЬНЫЕ ТЕГИ */}
             {data.tags && data.tags.length > 0 && (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '0.6rem' }}>
                     {data.tags.map((tag, index) => (
@@ -166,16 +177,9 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
                             key={index}
                             to={`/tag/${tag}`}
                             style={{
-                                background: 'rgba(255,255,255,0.08)',
-                                color: '#a0a0a0',
-                                padding: '0.2rem 0.6rem',
-                                borderRadius: '8px',
-                                fontSize: '0.75rem',
-                                fontWeight: '500',
-                                letterSpacing: '0.2px',
-                                textDecoration: 'none', // Убираем подчеркивание от ссылки
-                                transition: 'all 0.2s ease',
-                                cursor: 'pointer'
+                                background: 'rgba(255,255,255,0.08)', color: '#a0a0a0', padding: '0.2rem 0.6rem',
+                                borderRadius: '8px', fontSize: '0.75rem', fontWeight: '500', letterSpacing: '0.2px',
+                                textDecoration: 'none', transition: 'all 0.2s ease', cursor: 'pointer'
                             }}
                             onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.color = '#fff'; }}
                             onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#a0a0a0'; }}

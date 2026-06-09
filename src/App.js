@@ -2,16 +2,12 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify'; // ИМПОРТ ТОАСТОВ
 import 'react-toastify/dist/ReactToastify.css'; // ИМПОРТ БАЗОВЫХ СТИЛЕЙ ТОАСТОВ
+import './i18n';
+
+// Import files
 import ProfilePage from './pages/ProfilePage';
 import TrackPage from './pages/TrackPage';
 import TagPage from './pages/TagPage';
-import './i18n';
-
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import Footer from './components/Footer';
-
-// Импорт страниц
 import MainPage from './pages/MainPage';
 import AboutPage from './pages/AboutPage';
 import DMCAPage from './pages/DMCAPage';

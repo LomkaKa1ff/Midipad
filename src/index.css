@@ -1149,3 +1149,26 @@ button {
 .Toastify__progress-bar--error {
   background: #ff5555 !important; /* Красный */
 }
+
+/* Прозрачный фон */
+midi-visualizer {
+  background: transparent !important;
+}
+
+/* Базовый вид нот (спящие) */
+midi-visualizer svg rect.note {
+  fill: rgba(255, 255, 255, 0.3); /* Твой цвет, но приглушенный */
+  rx: 1px; /* 👈 ВОТ ОН, BORDER-RADIUS ДЛЯ SVG-НОТ! */
+  ry: 1px; /* Закругляем по обеим осям */
+  stroke: rgba(255, 255, 255, 0.1); /* Легкая обводка дает эффект "растянутости" */
+  stroke-width: 1px;
+  transition: fill 0.1s, filter 0.1s; /* Быстрая реакция */
+}
+
+/* Активные ноты (когда играет музыка) */
+midi-visualizer svg rect.note.active {
+  fill: #00ffcc; /* Чистый яркий цвет */
+  stroke: #ffffff; /* Белая обводка делает активную ноту визуально шире и мощнее */
+  stroke-width: 1px;
+  filter: drop-shadow(0 0 6px rgba(0, 255, 204, 0.8)); /* Мощное неоновое свечение */
+}
