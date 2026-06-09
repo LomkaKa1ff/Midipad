@@ -17,22 +17,24 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
     };
     const userId = getUserId();
 
-    const isCurrentTrack = currentTrack && String(currentTrack._id || currentTrack.id) === String(data._id || data.id);
-
-    const [localLikes, setLocalLikes] = useState(data.likes || 0);
+    const [localLikes, setLocalLikes] = useState(data?.likes || 0);
     const [localIsLiked, setLocalIsLiked] = useState(() => {
-        if (!userId || !data.likedBy) return false;
+        if (!userId || !data?.likedBy) return false;
         return data.likedBy.some(id => String(id) === String(userId));
     });
-    const [localDownloads, setLocalDownloads] = useState(data.downloads || 0);
+    const [localDownloads, setLocalDownloads] = useState(data?.downloads || 0);
 
     useEffect(() => {
-        setLocalLikes(data.likes || 0);
-        setLocalDownloads(data.downloads || 0);
-        if (userId && data.likedBy) {
+        setLocalLikes(data?.likes || 0);
+        setLocalDownloads(data?.downloads || 0);
+        if (userId && data?.likedBy) {
             setLocalIsLiked(data.likedBy.some(id => String(id) === String(userId)));
         }
     }, [data, userId]);
+
+    if (!data) return null;
+
+    const isCurrentTrack = currentTrack && String(currentTrack._id || currentTrack.id) === String(data._id || data.id);
 
     const displayLikes = isCurrentTrack ? (currentTrack.likes || 0) : localLikes;
     const displayDownloads = isCurrentTrack ? (currentTrack.downloads || 0) : localDownloads;
@@ -106,9 +108,6 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
         }
     };
 
-    // ФОРМИРУЕМ ССЫЛКУ НА ФАЙЛ ДЛЯ ВИЗУАЛИЗАТОРА
-    const fileUrl = `http://localhost:5000/uploads/${data.filename}`;
-
     return (
         <div className="midi-card" style={{ position: 'relative', padding: '1.2rem', display: 'flex', flexDirection: 'column' }}>
             {isAuthor && onDeleteClick && (
@@ -127,36 +126,33 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
                 </button>
             )}
 
-            {/* 👇 ОЖИВШИЙ ЭКРАНЧИК С НОТАМИ 👇 */}
+            {/* 👇 НАШИ КЛАССИЧЕСКИЕ ЛЕГКИЕ 4 ДИВА 👇 */}
             <div className="piano-roll" style={{
                 position: 'relative',
                 marginBottom: '0.8rem',
-                height: '80px', // Высота экранчика
+                height: '100px',
                 background: '#111',
                 borderRadius: '8px',
                 overflow: 'hidden',
-                boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8)'
+                boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                gap: '8px', /* Чуть уменьшили отступ, чтобы влез 4-й див */
+                padding: '10px 0'
             }}>
-                {/* НАСТОЯЩИЙ ВИЗУАЛИЗАТОР */}
-                <midi-visualizer
-                    id={`visualizer-${data._id || data.id}`}
-                    key={fileUrl}
-                    type="piano-roll"
-                    src={fileUrl}
-                    style={{ width: '100%', height: '100%', display: 'block' }}
-                    // 👇 ДЕЛАЕМ ИХ ЖИРНЫМИ И ПЛОТНЫМИ 👇
-                    note-height="5"    /* Увеличиваем толщину (по умолчанию 2) */
-                    note-spacing="1"   /* Оставляем зазор, чтобы не слипались */
-                ></midi-visualizer>
+                <div style={{ width: '40%', marginLeft: '10%', height: '6px', background: 'rgba(255,255,255,0.8)', borderRadius: '3px' }}></div>
+                <div style={{ width: '60%', marginLeft: '20%', height: '6px', background: '#fff', borderRadius: '3px', boxShadow: '0 0 10px rgba(255,255,255,0.8)' }}></div>
+                <div style={{ width: '30%', marginLeft: '50%', height: '6px', background: 'rgba(255,255,255,0.5)', borderRadius: '3px' }}></div>
+                <div style={{ width: '45%', marginLeft: '15%', height: '6px', background: 'rgba(255,255,255,0.25)', borderRadius: '3px' }}></div>
 
-                {/* ОВЕРЛЕЙ С КНОПКОЙ PLAY ПОВЕРХ ЭКРАНА */}
                 <div className="play-overlay">
                     <button className="play-btn" onClick={handleTogglePlay}>
                         {isCurrentTrack ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" />}
                     </button>
                 </div>
             </div>
-            {/* 👆 ---------------------------- 👆 */}
+            {/* 👆 --------------------------------- 👆 */}
 
             <h3 className="card-title" title={data.title} style={{ margin: '0 0 0.3rem 0', fontSize: '1.2rem', lineHeight: '1.2' }}>
                 <Link to={`/track/${data._id || data.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
@@ -192,7 +188,7 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
 
             <div style={{ width: '100%', height: '1px', background: 'rgba(255,255,255,0.1)', marginBottom: '0.6rem' }}></div>
 
-            <div className="card-stats" style={{ display: 'flex', gap: '1rem', margin: '0 0 0.8rem 0', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+            <div className="card-stats" style={{ display: 'flex', gap: '1rem', margin: '0 0 0.8rem 0', fontSize: '0.85rem', color: 'var(--text-muted)', alignItems: 'center' }}>
                 <button
                     className="heart-btn"
                     onClick={handleLike}

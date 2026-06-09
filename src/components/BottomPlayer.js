@@ -3,8 +3,21 @@ import { usePlayer } from '../context/PlayerContext';
 import { Heart, Download, Share2, Music, X, SkipBack, SkipForward, Volume2, VolumeX, Play, Pause } from 'lucide-react';
 import { toast } from 'react-toastify';
 
+const MemoizedMidiPlayer = React.memo(React.forwardRef(({ fileUrl, visualizerId }, ref) => {
+    return (
+        <midi-player
+            ref={ref}
+            src={fileUrl}
+            sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus"
+            visualizer={visualizerId}
+            className="hidden-midi-player"
+        ></midi-player>
+    );
+}), (prevProps, nextProps) => {
+    return prevProps.fileUrl === nextProps.fileUrl && prevProps.visualizerId === nextProps.visualizerId;
+});
+
 export default function BottomPlayer() {
-    // 1. ДОСТАЛИ playNext, playPrev И playlist ИЗ КОНТЕКСТА
     const { currentTrack, playTrack, updateCurrentTrack, playNext, playPrev, playlist = [] } = usePlayer();
     const playerRef = useRef(null);
 
@@ -28,10 +41,16 @@ export default function BottomPlayer() {
     const isLiked = userId && currentTrack?.likedBy ? currentTrack.likedBy.some(id => String(id) === String(userId)) : false;
     const trackIdForAudio = currentTrack ? (currentTrack._id || currentTrack.id) : null;
 
-    // 2. ОПРЕДЕЛЯЕМ, ЕСТЬ ЛИ СЛЕДУЮЩИЙ И ПРЕДЫДУЩИЙ ТРЕК
     const currentIndex = playlist.findIndex(t => String(t._id || t.id) === String(trackIdForAudio));
     const hasPrev = currentIndex > 0;
     const hasNext = currentIndex !== -1 && currentIndex < playlist.length - 1;
+
+    // 👇 МАГИЯ: Храним свежие данные без вызова перерендеров эффекта
+    const stateRef = useRef({ hasNext, playNext, volume });
+    useEffect(() => {
+        stateRef.current = { hasNext, playNext, volume };
+    }, [hasNext, playNext, volume]);
+    // 👆
 
     useEffect(() => {
         if (!trackIdForAudio || !playerRef.current) return;
@@ -41,7 +60,7 @@ export default function BottomPlayer() {
             try {
                 if (window.Tone && window.Tone.Destination) {
                     window.Tone.Destination.mute = false;
-                    const gain = volume / 100;
+                    const gain = stateRef.current.volume / 100;
                     window.Tone.Destination.volume.value = gain > 0 ? 20 * Math.log10(gain) : -100;
                 }
                 player.start();
@@ -59,7 +78,7 @@ export default function BottomPlayer() {
         const listenTimer = setTimeout(async () => {
             try {
                 await fetch(`http://localhost:5000/api/midi/listen/${trackIdForAudio}`, { method: 'POST' });
-            } catch (e) { console.error("Ошибка при учете прослушивания", e); }
+            } catch (e) {}
         }, 3000);
 
         const timeInterval = setInterval(() => {
@@ -81,9 +100,9 @@ export default function BottomPlayer() {
                 if (dur > 0) {
                     setProgress((curr / dur) * 100);
 
-                    // 3. АВТОПЕРЕКЛЮЧЕНИЕ НА СЛЕДУЮЩИЙ ТРЕК ПРИ ЗАВЕРШЕНИИ (за 0.2 сек до конца)
-                    if (curr >= dur - 0.2 && hasNext) {
-                        playNext();
+                    // Берем актуальные функции из нашего "сейфа" (ref)
+                    if (curr >= dur - 0.2 && stateRef.current.hasNext) {
+                        stateRef.current.playNext();
                     }
                 }
             }
@@ -95,14 +114,14 @@ export default function BottomPlayer() {
             player.removeEventListener('load', handleLoad);
 
             try {
-                player.stop();
+                player.stop(); // 👈 ТЕПЕРЬ СТОП СРАБАТЫВАЕТ ТОЛЬКО ПРИ СМЕНЕ ТРЕКА
                 if (window.Tone && window.Tone.Destination) {
                     window.Tone.Destination.mute = true;
                     window.Tone.Destination.volume.value = -100;
                 }
-            } catch (err) { console.error("Cleanup error:", err); }
+            } catch (err) {}
         };
-    }, [trackIdForAudio, hasNext, playNext, volume]); // Добавили зависимости
+    }, [trackIdForAudio]); // 👈 ЖЕЛЕЗНОЕ ПРАВИЛО: ПЕРЕЗАПУСК ТОЛЬКО ЕСЛИ СМЕНИЛСЯ САМ ТРЕК
 
     const handleLike = async (e) => {
         e.stopPropagation();
@@ -159,7 +178,7 @@ export default function BottomPlayer() {
                     window.Tone.Destination.volume.value = 20 * Math.log10(gain);
                 }
             }
-        } catch (err) { console.warn("Tone.js управление не удалось:", err); }
+        } catch (err) {}
     };
 
     const handleVolumeChange = (e) => {
@@ -188,7 +207,7 @@ export default function BottomPlayer() {
 
     if (!currentTrack) return null;
 
-    const fileUrl = `http://localhost:5000/uploads/${currentTrack.filename}`;
+    const fileUrl = `http://localhost:5000/uploads/${encodeURIComponent(currentTrack.filename)}`;
     const downloadUrl = `http://localhost:5000/api/midi/download/${trackIdForAudio}`;
 
     return (
@@ -203,7 +222,6 @@ export default function BottomPlayer() {
 
             <div className="bp-section bp-center">
                 <div className="bp-controls-row">
-                    {/* 4. ОЖИВИЛИ КНОПКУ PREV */}
                     <button
                         className="bp-icon-btn"
                         onClick={playPrev}
@@ -217,15 +235,12 @@ export default function BottomPlayer() {
                         {isPlaying ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" />}
                     </button>
 
-                    <midi-player
+                    <MemoizedMidiPlayer
                         ref={playerRef}
-                        src={fileUrl}
-                        sound-font="https://storage.googleapis.com/magentadata/js/soundfonts/sgm_plus"
-                        visualizer={`#visualizer-${trackIdForAudio}`}
-                        className="hidden-midi-player"
-                    ></midi-player>
+                        fileUrl={fileUrl}
+                        visualizerId={`#visualizer-${trackIdForAudio}`}
+                    />
 
-                    {/* 5. ОЖИВИЛИ КНОПКУ NEXT */}
                     <button
                         className="bp-icon-btn"
                         onClick={playNext}
