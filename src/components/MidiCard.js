@@ -130,7 +130,7 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
             <div className="piano-roll" style={{
                 position: 'relative',
                 marginBottom: '0.8rem',
-                height: '100px',
+                height: '80px',
                 background: '#111',
                 borderRadius: '8px',
                 overflow: 'hidden',

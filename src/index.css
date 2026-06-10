@@ -1172,3 +1172,40 @@ midi-visualizer svg rect.note.active {
   stroke-width: 1px;
   filter: drop-shadow(0 0 6px rgba(0, 255, 204, 0.8)); /* Мощное неоновое свечение */
 }
+
+/* =========================================
+   📱 МОБИЛЬНАЯ АДАПТАЦИЯ (Для экранов < 768px)
+   ========================================= */
+@media (max-width: 768px) {
+  /* 1. Чуть уменьшаем внутренние отступы карточки, чтобы сэкономить место */
+  .midi-card {
+    padding: 0.8rem !important;
+  }
+
+  /* 2. Делаем экранчик с нотами чуть компактнее по высоте */
+  .piano-roll {
+    height: 80px !important;
+    gap: 6px !important;
+  }
+
+  /* 3. Уменьшаем размер заголовков, чтобы длинные названия не ломали верстку */
+  .card-title {
+    font-size: 1rem !important;
+  }
+
+  /* 4. Разрешаем статистике (лайки, комменты) переноситься на новую строку,
+        если экран совсем узкий (например, iPhone SE) */
+  .card-stats {
+    flex-wrap: wrap;
+    gap: 0.5rem !important;
+    justify-content: flex-start;
+  }
+
+  /* 5. Если у тебя есть сетка (Grid), где лежат карточки,
+        заставляем их выстраиваться в 1 колонку на мобилках.
+        (Замени .tracks-grid на класс твоего контейнера, если он называется иначе) */
+  .tracks-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+}
