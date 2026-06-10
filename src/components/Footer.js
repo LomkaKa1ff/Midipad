@@ -31,14 +31,17 @@ export default function Footer() {
 
                 <div className="footer-col">
                     <h3>{t('footer_links')}</h3>
-                    <a href="/frontend/public">{t('footer_donate')}</a>
+                    <a href="https://boosty.to/komkalive"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                    > {t('footer_donate')}</a>
                 </div>
 
                 <div className="footer-col">
                     <h3>{t('nav_contacts')}</h3>
 
                     <a href="mailto:support@midipad.me" style={{ marginBottom: '1rem', display: 'inline-block' }}>
-                        support@midipad.me
+                        support@midipad.net
                     </a>
 
                     {/* КНОПКА DISCORD */}

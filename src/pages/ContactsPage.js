@@ -7,7 +7,7 @@ export default function ContactsPage() {
             <p>
                 We are always open for communication. If you have any questions or suggestions, please contact us by email:
                 <ul>
-                    <li><a href="mailto:support@midipad.me">support@midipad.me</a></li>
+                    <li><a href="mailto:support@midipad.net">support@midipad.net</a></li>
                 </ul>
             </p>
 

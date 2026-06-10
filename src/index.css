@@ -31,7 +31,7 @@ button {
 }
 
 /* =========================================
-   Layout (Основной каркас)
+   Layout
 ========================================= */
 .app-container {
   display: flex;
@@ -60,16 +60,16 @@ button {
   width: 100%;
   height: 100%;
   z-index: -1;
-  pointer-events: none; /* Чтобы фон не блокировал кнопки */
+  pointer-events: none;
 }
 
 .content-overlay {
   position: relative;
-  z-index: 100; /* Ставим максимально высоко */
+  z-index: 100;
 }
 
 /* =========================================
-   Header (Шапка сайта)
+   Header
 ========================================= */
 .header {
   display: flex;
@@ -134,7 +134,6 @@ button {
   color: white;
 }
 
-/* Поиск */
 .search-container {
   flex: 1;
   max-width: 600px;
@@ -166,7 +165,6 @@ button {
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Кнопки в шапке */
 .header-actions {
   display: flex;
   gap: 1rem;
@@ -206,7 +204,7 @@ button {
 }
 
 /* =========================================
-   Sidebar (Боковое меню)
+   Sidebar
 ========================================= */
 .sidebar {
   width: 250px;
@@ -245,7 +243,7 @@ button {
 }
 
 /* =========================================
-   Typography (Тексты и заголовки)
+   Typography
 ========================================= */
 .title-main {
   font-size: 3rem;
@@ -273,7 +271,7 @@ button {
 }
 
 /* =========================================
-   Grid & Cards (Сетка и карточки MIDI)
+   Grid & Cards
 ========================================= */
 .midi-grid {
   display: grid;
@@ -409,7 +407,7 @@ button {
 }
 
 /* =========================================
-   Pagination (Переключение страниц)
+   Pagination
 ========================================= */
 .pagination {
   display: flex;
@@ -446,7 +444,7 @@ button {
 }
 
 /* =========================================
-   Text Pages (О нас, Правила и т.д.)
+   Text Pages
 ========================================= */
 .text-content {
   max-width: 800px;
@@ -478,11 +476,11 @@ button {
 }
 
 /* =========================================
-   Footer (Подвал)
+   Footer
 ========================================= */
 .footer {
   border-top: 1px solid var(--border);
-  background: rgba(10, 10, 10, 1); /* Изменил прозрачность на 1 для надежности */
+  background: rgba(10, 10, 10, 1);
   margin-top: auto;
   position: relative;
   z-index: 10;
@@ -537,7 +535,7 @@ button {
 }
 
 /* =========================================
-   Auth Pages (Крупный текст + Компактная карточка)
+   Auth Pages
 ========================================= */
 .auth-page-container {
   width: 100vw;
@@ -570,11 +568,11 @@ button {
 
 .auth-card {
   width: 100%;
-  max-width: 440px; /* Вернули компактную ширину */
+  max-width: 440px;
   background: rgba(15, 15, 15, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
-  padding: 2.5rem 2rem; /* Немного уменьшили внутренние отступы */
+  padding: 2.5rem 2rem;
   backdrop-filter: blur(12px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
@@ -582,7 +580,7 @@ button {
 .auth-card h1 {
   color: white;
   text-align: center;
-  margin-bottom: 2rem; /* Слегка уменьшили отступ под заголовком */
+  margin-bottom: 2rem;
   font-size: 2.2rem;
   font-weight: 700;
 }
@@ -590,7 +588,7 @@ button {
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem; /* Чуть сблизили поля */
+  gap: 1.2rem;
 }
 
 .auth-input-group label {
@@ -611,7 +609,7 @@ button {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
-  padding: 0.9rem 1rem; /* Сделали поля чуть менее высокими */
+  padding: 0.9rem 1rem;
   border-radius: 8px;
   outline: none;
   font-size: 1rem;
@@ -638,7 +636,7 @@ button {
   background: white;
   color: black;
   border: none;
-  padding: 0.9rem; /* Кнопка чуть компактнее, но всё еще массивная */
+  padding: 0.9rem;
   border-radius: 8px;
   font-weight: 700;
   font-size: 1.1rem;
@@ -657,7 +655,7 @@ button {
   text-align: center;
   color: var(--text-muted);
   font-size: 0.85rem;
-  margin: 1.5rem 0; /* Уменьшили отступы вокруг OR */
+  margin: 1.5rem 0;
 }
 
 .auth-divider::before,
@@ -717,7 +715,7 @@ button {
 }
 
 /* =========================================
-   Modal (Окно загрузки MIDI)
+   Modal
 ========================================= */
 .modal-overlay {
   position: fixed;
@@ -783,13 +781,13 @@ button {
 }
 
 .file-name-display {
-  color: #A7EF9E; /* Зеленый цвет для успешного выбора */
+  color: #A7EF9E;
   font-weight: 600;
   word-break: break-all;
 }
 
 /* =========================================
-   Bottom Player (С кастомным ползунком)
+   Bottom Player
 ========================================= */
 .bottom-player-wrapper {
   position: fixed;
@@ -802,7 +800,7 @@ button {
   justify-content: space-between;
   align-items: center;
   padding: 0 1.5rem;
-  padding-bottom: 20px; /* Приподнимаем контент, чтобы освободить низ для полосы */
+  padding-bottom: 20px;
   z-index: 9999;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   box-sizing: border-box;
@@ -838,13 +836,12 @@ button {
 
 .bp-controls-row {
   display: flex;
-  justify-content: center; /* Центрируем всё */
+  justify-content: center;
   align-items: center;
   gap: 1.5rem;
-  width: 100%; /* Растягиваем, чтобы центр был ровно по центру */
+  width: 100%;
 }
 
-/* Обложка и текст */
 .bp-cover {
   width: 48px;
   height: 48px;
@@ -869,7 +866,6 @@ button {
   font-size: 0.8rem;
 }
 
-/* Кнопки */
 .bp-icon-btn {
   background: transparent;
   border: none;
@@ -894,7 +890,6 @@ button {
   border-radius: 50%;
 }
 
-/* --- Настоящий микшер громкости --- */
 .bp-volume-container {
   display: flex;
   align-items: center;
@@ -928,11 +923,11 @@ button {
 }
 
 /* =========================================
-   НАШ КАСТОМНЫЙ ПРОГРЕСС-БАР И ТАЙМЕРЫ
+   Progress bar and timer
 ========================================= */
 .bp-progress-wrapper {
   position: absolute;
-  bottom: 8px; /* Ровно прибиваем к низу враппера */
+  bottom: 8px;
   left: 0;
   width: 100vw;
   padding: 0 1.5rem;
@@ -947,14 +942,13 @@ button {
   color: #a0a0a0;
   font-family: ui-monospace, SFMono-Regular, monospace;
   font-weight: 500;
-  width: 35px; /* Фиксируем ширину, чтобы бар не дергался, когда цифры меняются */
+  width: 35px;
   text-align: center;
 }
 
-/* Наш кастомный ползунок прогресса */
 .bp-custom-slider {
   -webkit-appearance: none;
-  flex: 1; /* Растягивает полосу на всё свободное место между таймерами */
+  flex: 1;
   height: 4px;
   border-radius: 2px;
   outline: none;
@@ -962,7 +956,6 @@ button {
   transition: height 0.1s;
 }
 
-/* Прячем дефолтный кружочек (thumb), оставляем только закрашенную линию */
 .bp-custom-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 0;
@@ -973,10 +966,6 @@ button {
   height: 6px;
 }
 
-/* =========================================
-   КАСТОМНАЯ КНОПКА PLAY И НЕВИДИМЫЙ ПЛЕЕР
-========================================= */
-/* Прячем гугловского монстра навсегда */
 .hidden-midi-player {
   position: absolute !important;
   width: 0 !important;
@@ -986,8 +975,6 @@ button {
   visibility: hidden !important;
 }
 
-/* Наша идеальная React-кнопка (Uwupad Style) */
-/* Максимальный приоритет для кнопки */
 .bp-custom-play-btn {
   width: 44px !important;
   height: 44px !important;
@@ -997,7 +984,6 @@ button {
   border-radius: 12px !important;
   border: none !important;
 
-  /* ЦЕНТРИРОВАНИЕ ИКОНКИ */
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
@@ -1008,7 +994,6 @@ button {
   transition: transform 0.1s, background-color 0.1s !important;
 }
 
-/* На случай, если библиотека иконок добавляет свои отступы */
 .bp-custom-play-btn svg {
   display: block !important;
   margin: 0 auto !important;
@@ -1019,7 +1004,6 @@ button {
   background-color: rgba(255, 255, 255, 0.9) !important;
 }
 
-/* Разделитель между элементами в карточке */
 .stats-divider {
   width: 1px;
   height: 14px;
@@ -1027,7 +1011,6 @@ button {
   margin: 0 8px;
 }
 
-/* Эффект при клике на лайк */
 .heart-btn {
   background: none;
   border: none;
@@ -1041,24 +1024,21 @@ button {
 .heart-btn.liked { color: #ff5555; }
 .heart-btn:hover { color: white; }
 
-/* КАСТОМИЗАЦИЯ TOAST-УВЕДОМЛЕНИЙ */
 .custom-toast {
-  background: linear-gradient(145deg, #1e1e1e, #141414) !important; /* Темный градиент */
+  background: linear-gradient(145deg, #1e1e1e, #141414) !important;
   color: #ffffff !important;
-  border-radius: 10px !important; /* Скругленные углы */
-  font-family: monospace, sans-serif !important; /* Моноширинный шрифт как на скрине */
+  border-radius: 10px !important;
+  font-family: monospace, sans-serif !important;
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6) !important;
   padding: 16px !important;
 }
 
-/* Красная полоска прогресса внизу */
 .Toastify__progress-bar--error {
   background: #ff5555 !important;
   height: 4px !important;
 }
 
-/* Иконка ошибки (делаем красной) */
 .Toastify__toast-icon {
   width: 24px;
   height: 24px;
@@ -1067,7 +1047,6 @@ button {
   fill: #ff5555 !important;
 }
 
-/* Кнопка закрытия (крестик) */
 .Toastify__close-button {
   color: #fff !important;
   opacity: 0.6;
@@ -1077,59 +1056,48 @@ button {
   opacity: 1;
 }
 
-/* Зеленая полоска прогресса для успешных тоастов */
 .Toastify__progress-bar--success {
-  background: #00ffcc !important; /* Яркий кибер-зелёный под стать общему стилю */
+  background: #00ffcc !important;
   height: 4px !important;
 }
 
-/* Иконка успешного уведомления */
 .Toastify__toast--success .Toastify__toast-icon svg {
   fill: #00ffcc !important;
 }
 
-/* --- UI КОСМЕТИКА ДЛЯ КОММЕНТАРИЕВ --- */
-
-/* Стили для бокса комментария (Обновление) */
 .comments-section .comment-box {
-  background-color: #0c0c0c !important; /* Светлее, чем было (#1a1a1a -> #2a2a2a) */
+  background-color: #0c0c0c !important;
   border-radius: 8px;
-  padding: 1.5rem; /* Больше пространства */
+  padding: 1.5rem;
   border: 1px solid rgba(255,255,255,0.05);
-  display: flex; /* Flex container для контента и кнопки */
-  justify-content: space-between; /* Разносим контент и кнопку по краям */
+  display: flex;
+  justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
   transition: background-color 0.2s ease;
 }
 
-/* Эффект наведения на весь бокс (опционально, для оглядности) */
 .comments-section .comment-box:hover {
   background-color: #1e1e1e !important;
 }
 
-/* Стили для кнопки удаления (корзины), которая будет СПРАВА */
 .comment-box .comment-delete-btn {
   background: none;
   border: none;
-  color: #666; /* Изначально серый цвет */
+  color: #666;
   cursor: pointer;
   padding: 0;
   font-size: 1.2rem;
-  align-self: center; /* Центрируем иконку по вертикали */
+  align-self: center;
   opacity: 0.6;
   transition: all 0.2s ease;
 }
 
-/* КРАСНЫЙ ховер эффект для мусорки */
 .comment-box .comment-delete-btn:hover {
-  color: #ff5555 !important; /* Насыщенный красный */
-  transform: scale(1.1); /* Слегка увеличиваем */
-  opacity: 1; /* Полная видимость */
+  color: #ff5555 !important;
+  transform: scale(1.1);
+  opacity: 1;
 }
-
-/* --- ЦВЕТА УВЕДОМЛЕНИЙ (Toastify) --- */
-/* (На всякий случай подтверждаем, что они правильные) */
 
 .Toastify__toast--success {
   background: #2a2a2a;
@@ -1138,7 +1106,7 @@ button {
   font-family: monospace;
 }
 .Toastify__progress-bar--success {
-  background: #00ffcc !important; /* Кибер-зелёный */
+  background: #00ffcc !important;
 }
 .Toastify__toast--error {
   background: #2a2a2a;
@@ -1147,63 +1115,52 @@ button {
   font-family: monospace;
 }
 .Toastify__progress-bar--error {
-  background: #ff5555 !important; /* Красный */
+  background: #ff5555 !important;
 }
 
-/* Прозрачный фон */
 midi-visualizer {
   background: transparent !important;
 }
 
-/* Базовый вид нот (спящие) */
 midi-visualizer svg rect.note {
-  fill: rgba(255, 255, 255, 0.3); /* Твой цвет, но приглушенный */
-  rx: 1px; /* 👈 ВОТ ОН, BORDER-RADIUS ДЛЯ SVG-НОТ! */
-  ry: 1px; /* Закругляем по обеим осям */
-  stroke: rgba(255, 255, 255, 0.1); /* Легкая обводка дает эффект "растянутости" */
+  fill: rgba(255, 255, 255, 0.3);
+  rx: 1px;
+  ry: 1px;
+  stroke: rgba(255, 255, 255, 0.1);
   stroke-width: 1px;
-  transition: fill 0.1s, filter 0.1s; /* Быстрая реакция */
+  transition: fill 0.1s, filter 0.1s;
 }
 
-/* Активные ноты (когда играет музыка) */
 midi-visualizer svg rect.note.active {
-  fill: #00ffcc; /* Чистый яркий цвет */
-  stroke: #ffffff; /* Белая обводка делает активную ноту визуально шире и мощнее */
+  fill: #00ffcc;
+  stroke: #ffffff;
   stroke-width: 1px;
-  filter: drop-shadow(0 0 6px rgba(0, 255, 204, 0.8)); /* Мощное неоновое свечение */
+  filter: drop-shadow(0 0 6px rgba(0, 255, 204, 0.8));
 }
 
 /* =========================================
-   📱 МОБИЛЬНАЯ АДАПТАЦИЯ (Для экранов < 768px)
+   Mobile adaptation (For screens < 768px)
    ========================================= */
 @media (max-width: 768px) {
-  /* 1. Чуть уменьшаем внутренние отступы карточки, чтобы сэкономить место */
   .midi-card {
     padding: 0.8rem !important;
   }
 
-  /* 2. Делаем экранчик с нотами чуть компактнее по высоте */
   .piano-roll {
     height: 80px !important;
     gap: 6px !important;
   }
 
-  /* 3. Уменьшаем размер заголовков, чтобы длинные названия не ломали верстку */
   .card-title {
     font-size: 1rem !important;
   }
 
-  /* 4. Разрешаем статистике (лайки, комменты) переноситься на новую строку,
-        если экран совсем узкий (например, iPhone SE) */
   .card-stats {
     flex-wrap: wrap;
     gap: 0.5rem !important;
     justify-content: flex-start;
   }
 
-  /* 5. Если у тебя есть сетка (Grid), где лежат карточки,
-        заставляем их выстраиваться в 1 колонку на мобилках.
-        (Замени .tracks-grid на класс твоего контейнера, если он называется иначе) */
   .tracks-grid {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;

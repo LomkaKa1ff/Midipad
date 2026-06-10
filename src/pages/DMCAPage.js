@@ -21,7 +21,7 @@ export default function DMCAPage() {
 
             <h2>Contact Information for DMCA Notifications</h2>
             <p>Please direct all DMCA notices and counter-notices to our Designated Agent at:</p>
-            <p><strong>Email:</strong> <a href="mailto:dmca@midipad.me">dmca@midipad.me</a></p>
+            <p><strong>Email:</strong> <a href="mailto:dmca@midipad.net">dmca@midipad.net</a></p>
         </div>
     );
 }

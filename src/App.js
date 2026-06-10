@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify'; // ИМПОРТ ТОАСТОВ
-import 'react-toastify/dist/ReactToastify.css'; // ИМПОРТ БАЗОВЫХ СТИЛЕЙ ТОАСТОВ
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './i18n';
 
 // Import files
@@ -21,7 +21,6 @@ import MainLayout from './components/MainLayout';
 function App() {
     return (
         <BrowserRouter>
-            {/* КОНТЕЙНЕР ДЛЯ УВЕДОМЛЕНИЙ */}
             <ToastContainer
                 position="top-right"
                 autoClose={3000}
@@ -37,11 +36,9 @@ function App() {
             />
 
             <Routes>
-                {/* --- ГРУППА 1: ЧИСТЫЕ СТРАНИЦЫ (Без шапки и футера) --- */}
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
 
-                {/* --- ГРУППА 2: СТАНДАРТНЫЕ СТРАНИЦЫ (Обернуты в MainLayout) --- */}
                 <Route element={<MainLayout />}>
                     <Route path="/" element={<MainPage />} />
                     <Route path="/profile" element={<ProfilePage />} />

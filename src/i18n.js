@@ -218,13 +218,13 @@ const resources = {
 };
 
 i18n
-    .use(LanguageDetector) // Автоопределение языка браузера
-    .use(initReactI18next) // Подключение к React
+    .use(LanguageDetector)
+    .use(initReactI18next)
     .init({
         resources,
-        fallbackLng: 'en', // Язык по умолчанию
+        fallbackLng: 'en',
         interpolation: {
-            escapeValue: false // React сам защищает от XSS
+            escapeValue: false
         }
     });
 
