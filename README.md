@@ -4,7 +4,7 @@
 
 Welcome to the official frontend repository for [midipad.net](https://midipad.net) — a fast, modern, and completely ad-free platform created for beatmakers, producers, and musicians to share and discover MIDI files.
 
-Check out the [MidiPad Backend Repository](https://github.com/ТВОЙ_НИК/midipad-backend).
+Check out the [MidiPad Backend Repository](https://github.com/LomkaKa1ff/Midipad-backend.git).
 
 ## Features
 * **Community Driven:** Like, comment, and track downloads for every MIDI file.
