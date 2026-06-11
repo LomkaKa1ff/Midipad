@@ -45,12 +45,10 @@ export default function BottomPlayer() {
     const hasPrev = currentIndex > 0;
     const hasNext = currentIndex !== -1 && currentIndex < playlist.length - 1;
 
-    // 👇 МАГИЯ: Храним свежие данные без вызова перерендеров эффекта
     const stateRef = useRef({ hasNext, playNext, volume });
     useEffect(() => {
         stateRef.current = { hasNext, playNext, volume };
     }, [hasNext, playNext, volume]);
-    // 👆
 
     useEffect(() => {
         if (!trackIdForAudio || !playerRef.current) return;
@@ -65,7 +63,7 @@ export default function BottomPlayer() {
                 }
                 player.start();
             } catch (err) {
-                console.warn("Автоплей не сработал:", err);
+                console.warn("Autoplay didn't work:", err);
             }
         };
 
@@ -77,7 +75,7 @@ export default function BottomPlayer() {
 
         const listenTimer = setTimeout(async () => {
             try {
-                await fetch(`http://localhost:5000/api/midi/listen/${trackIdForAudio}`, { method: 'POST' });
+                await fetch(`/api/midi/listen/${trackIdForAudio}`, { method: 'POST' });
             } catch (e) {}
         }, 3000);
 
@@ -100,7 +98,6 @@ export default function BottomPlayer() {
                 if (dur > 0) {
                     setProgress((curr / dur) * 100);
 
-                    // Берем актуальные функции из нашего "сейфа" (ref)
                     if (curr >= dur - 0.2 && stateRef.current.hasNext) {
                         stateRef.current.playNext();
                     }
@@ -114,14 +111,14 @@ export default function BottomPlayer() {
             player.removeEventListener('load', handleLoad);
 
             try {
-                player.stop(); // 👈 ТЕПЕРЬ СТОП СРАБАТЫВАЕТ ТОЛЬКО ПРИ СМЕНЕ ТРЕКА
+                player.stop();
                 if (window.Tone && window.Tone.Destination) {
                     window.Tone.Destination.mute = true;
                     window.Tone.Destination.volume.value = -100;
                 }
             } catch (err) {}
         };
-    }, [trackIdForAudio]); // 👈 ЖЕЛЕЗНОЕ ПРАВИЛО: ПЕРЕЗАПУСК ТОЛЬКО ЕСЛИ СМЕНИЛСЯ САМ ТРЕК
+    }, [trackIdForAudio]);
 
     const handleLike = async (e) => {
         e.stopPropagation();
@@ -131,7 +128,7 @@ export default function BottomPlayer() {
         }
 
         try {
-            const res = await fetch(`http://localhost:5000/api/midi/like/${trackIdForAudio}`, {
+            const res = await fetch(`/api/midi/like/${trackIdForAudio}`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -207,8 +204,8 @@ export default function BottomPlayer() {
 
     if (!currentTrack) return null;
 
-    const fileUrl = `http://localhost:5000/uploads/${encodeURIComponent(currentTrack.filename)}`;
-    const downloadUrl = `http://localhost:5000/api/midi/download/${trackIdForAudio}`;
+    const fileUrl = `/uploads/${encodeURIComponent(currentTrack.filename)}`;
+    const downloadUrl = `/api/midi/download/${trackIdForAudio}`;
 
     return (
         <div className="bottom-player-wrapper">

@@ -2,10 +2,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 export default function LanguageSwitcher() {
-    // Теперь i18n 100% будет содержать функцию changeLanguage
     const { i18n } = useTranslation();
 
-    // Защита от undefined при первой миллисекунде загрузки
     const currentLang = i18n.language || window.localStorage.getItem('i18nextLng') || 'en';
     const isRu = currentLang.startsWith('ru');
 

@@ -3,12 +3,11 @@ import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
-import BottomPlayer from './BottomPlayer'; // Импорт плеера
-import { PlayerProvider } from '../context/PlayerContext'; // Импорт провайдера
+import BottomPlayer from './BottomPlayer';
+import { PlayerProvider } from '../context/PlayerContext';
 
 export default function MainLayout() {
     return (
-        // Оборачиваем всё в PlayerProvider
         <PlayerProvider>
             <div className="app-container">
                 <Header />
@@ -20,7 +19,6 @@ export default function MainLayout() {
                 </div>
                 <Footer />
 
-                {/* Плеер висит поверх всего в самом низу */}
                 <BottomPlayer />
             </div>
         </PlayerProvider>

@@ -37,7 +37,7 @@ export default function ProfilePage() {
             setIsLoading(true);
             try {
                 const endpoint = activeTab === 'uploads' ? 'uploads' : 'liked';
-                const response = await fetch(`http://localhost:5000/api/midi/profile/${endpoint}`, {
+                const response = await fetch(`/api/midi/profile/${endpoint}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -78,7 +78,7 @@ export default function ProfilePage() {
         setIsDeleting(true);
         try {
             const trackId = trackToDelete._id || trackToDelete.id;
-            const res = await fetch(`http://localhost:5000/api/midi/${trackId}`, {
+            const res = await fetch(`/api/midi/${trackId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

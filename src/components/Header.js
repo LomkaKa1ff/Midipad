@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Search, UploadCloud, LogIn, User, LogOut } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // Подключили переводчик
+import { useTranslation } from 'react-i18next';
+
 import UploadModal from './UploadModal';
 import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Header() {
-    const { t } = useTranslation(); // Достали функцию перевода
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
-    // --- ЛОГИКА ПОИСКА ---
+    // Search logic
     const [searchParams] = useSearchParams();
     const currentSearch = searchParams.get('search') || '';
     const currentSort = searchParams.get('sort') || 'trending';
@@ -29,7 +30,6 @@ export default function Header() {
             }
         }
     };
-    // ---------------------
 
     const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
@@ -76,10 +76,8 @@ export default function Header() {
                 />
             </div>
 
-            {/* Добавили flex и gap для аккуратного выравнивания */}
             <div className="header-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
 
-                {/* Флаг теперь внутри блока с кнопками, слева от загрузки */}
                 <LanguageSwitcher />
 
                 <button className="btn btn-primary" onClick={handleUploadClick}>

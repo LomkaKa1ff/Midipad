@@ -114,7 +114,7 @@ export default function UploadModal({ isOpen, onClose }) {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:5000/api/midi/upload', {
+            const response = await fetch('/api/midi/upload', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` },
                 body: formData

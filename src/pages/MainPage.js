@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import MidiCard from '../components/MidiCard';
 import FaultyTerminal from '../components/backgrounds/FaultyTerminal';
-import { useTranslation } from 'react-i18next'; // 1. ДОБАВИЛИ ИМПОРТ
+import { useTranslation } from 'react-i18next';
 
 export default function MainPage() {
     const [searchParams] = useSearchParams();
-    const { t } = useTranslation(); // 2. ДОСТАЛИ ФУНКЦИЮ t()
+    const { t } = useTranslation();
 
     const activeTab = searchParams.get('sort') || 'trending';
     const searchQuery = searchParams.get('search') || '';
@@ -25,7 +25,7 @@ export default function MainPage() {
         const fetchMidis = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(`http://localhost:5000/api/midi?sort=${activeTab}&search=${searchQuery}`);
+                const response = await fetch(`/api/midi?sort=${activeTab}&search=${searchQuery}`);
                 const data = await response.json();
 
                 if (response.ok) {
@@ -88,7 +88,6 @@ export default function MainPage() {
                 </div>
             ) : midis.length === 0 ? (
                 <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '3rem 0' }}>
-                    {/* Передаем переменные прямо в переводчик! */}
                     {searchQuery
                         ? t('no_tracks_search', { query: searchQuery, tab: activeTab })
                         : activeTab === 'trending'

@@ -16,7 +16,7 @@ export default function TagPage() {
         const fetchByTag = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(`http://localhost:5000/api/midi/tag/${tag}`);
+                const response = await fetch(`/api/midi/tag/${tag}`);
                 if (response.ok) {
                     const data = await response.json();
                     setTracks(data);

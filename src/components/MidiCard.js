@@ -55,7 +55,7 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
         }
 
         try {
-            const res = await fetch(`http://localhost:5000/api/midi/like/${data._id}`, {
+            const res = await fetch(`/api/midi/like/${data._id}`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -84,7 +84,7 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
 
     const handleDownload = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/midi/download-increment/${data._id}`, { method: 'POST' });
+            const response = await fetch(`/api/midi/download-increment/${data._id}`, { method: 'POST' });
             if (response.ok) {
                 const result = await response.json();
                 setLocalDownloads(result.downloads);
@@ -94,7 +94,7 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
                     updateCurrentTrack({ downloads: result.downloads });
                 }
             }
-            window.location.href = `http://localhost:5000/api/midi/download/${data._id}`;
+            window.location.href = `/api/midi/download/${data._id}`;
         } catch (err) { console.error("Error downloading track:", err); }
     };
 
@@ -126,7 +126,6 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
                 </button>
             )}
 
-            {/* 👇 НАШИ КЛАССИЧЕСКИЕ ЛЕГКИЕ 4 ДИВА 👇 */}
             <div className="piano-roll" style={{
                 position: 'relative',
                 marginBottom: '0.8rem',
@@ -138,7 +137,7 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                gap: '8px', /* Чуть уменьшили отступ, чтобы влез 4-й див */
+                gap: '8px',
                 padding: '10px 0'
             }}>
                 <div style={{ width: '40%', marginLeft: '10%', height: '6px', background: 'rgba(255,255,255,0.8)', borderRadius: '3px' }}></div>
@@ -152,7 +151,6 @@ export default function MidiCard({ data, onDeleteClick, playlist }) {
                     </button>
                 </div>
             </div>
-            {/* 👆 --------------------------------- 👆 */}
 
             <h3 className="card-title" title={data.title} style={{ margin: '0 0 0.3rem 0', fontSize: '1.2rem', lineHeight: '1.2' }}>
                 <Link to={`/track/${data._id || data.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>

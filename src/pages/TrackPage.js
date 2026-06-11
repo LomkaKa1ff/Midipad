@@ -11,7 +11,6 @@ export default function TrackPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
 
-    // Стейт для текста нового комментария
     const [commentText, setCommentText] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -20,9 +19,9 @@ export default function TrackPage() {
     const user = userStr ? JSON.parse(userStr) : null;
     const currentUserId = user ? (user.id || user.userId || user._id) : null;
 
-    // Загрузка трека
+    // Track loading
     const fetchTrack = () => {
-        fetch(`http://localhost:5000/api/midi/track/${id}`)
+        fetch(`/api/midi/track/${id}`)
             .then(res => {
                 if (!res.ok) throw new Error('Track not found');
                 return res.json();
@@ -36,7 +35,7 @@ export default function TrackPage() {
         fetchTrack();
     }, [id]);
 
-    // Отправка комментария
+    // Comment sending
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
         if (!commentText.trim()) return;
@@ -44,7 +43,7 @@ export default function TrackPage() {
 
         setIsSubmitting(true);
         try {
-            const response = await fetch(`http://localhost:5000/api/midi/${id}/comment`, {
+            const response = await fetch(`/api/midi/${id}/comment`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,25 +57,25 @@ export default function TrackPage() {
             if (response.ok) {
                 setTrack(data);
                 setCommentText('');
-                toast.success("Comment added successfully!"); // ENGLISH
+                toast.success("Comment added successfully!");
             } else {
-                toast.error(data.message || "Failed to add comment"); // ENGLISH
+                toast.error(data.message || "Failed to add comment");
             }
         } catch (err) {
             console.error(err);
-            toast.error("Server error"); // ENGLISH
+            toast.error("Server error");
         } finally {
             setIsSubmitting(false);
         }
     };
 
 
-    // --- НОВАЯ ФУНКЦИЯ УДАЛЕНИЯ КОММЕНТАРИЯ ---
+    // Comment deletion
     const handleDeleteComment = async (commentId) => {
-        if (!token) return toast.error("You must be logged in to delete comments."); // ENGLISH
+        if (!token) return toast.error("You must be logged in to delete comments.");
 
         try {
-            const response = await fetch(`http://localhost:5000/api/midi/${id}/comment/${commentId}`, {
+            const response = await fetch(`/api/midi/${id}/comment/${commentId}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -87,18 +86,18 @@ export default function TrackPage() {
 
             if (response.ok) {
                 setTrack(data);
-                toast.success("Comment deleted successfully!"); // ENGLISH
+                toast.success("Comment deleted successfully!");
             } else {
-                toast.error(data.message || "Failed to delete comment"); // ENGLISH
+                toast.error(data.message || "Failed to delete comment");
             }
         } catch (err) {
             console.error("Error deleting comment:", err);
-            toast.error("Server error"); // ENGLISH
+            toast.error("Server error");
         }
     };
 
 
-    // --- ОПТИМИЗАЦИЯ ФОНА ---
+    // Background optimization
     const memoizedBackground = useMemo(() => (
         <div className="background-layer">
             <FaultyTerminal scale={3} brightness={0.05} />
@@ -121,20 +120,17 @@ export default function TrackPage() {
                 ) : track ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
 
-                        {/* КАРТОЧКА ТРЕКА ПО ЦЕНТРУ */}
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                             <div style={{ width: '100%', maxWidth: '400px' }}>
                                 <MidiCard data={track} />
                             </div>
                         </div>
 
-                        {/* БЛОК КОММЕНТАРИЕВ */}
                         <div className="comments-section" style={{ background: 'rgba(0,0,0,0.4)', padding: '2rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
                             <h3 style={{ marginBottom: '1.5rem', fontSize: '1.3rem', fontFamily: 'monospace' }}>
                                 Comments ({track.comments?.length || 0})
                             </h3>
 
-                            {/* Форма отправки коммента */}
                             {user ? (
                                 <form onSubmit={handleCommentSubmit} style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
                                     <input
@@ -168,7 +164,6 @@ export default function TrackPage() {
                                 </div>
                             )}
 
-                            {/* Список комментариев */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                                 {!track.comments || track.comments.length === 0 ? (
                                     <p style={{ color: 'var(--text-muted)', textAlign: 'center', fontSize: '0.9rem' }}>No comments yet. Be the first to write one!</p>
@@ -182,7 +177,7 @@ export default function TrackPage() {
                                                 className="comment-box"
                                                 style={{
                                                     padding: '1.5rem',
-                                                    background: '#1e1e1e', // Чуть светлее черного
+                                                    background: '#1e1e1e',
                                                     borderRadius: '8px',
                                                     display: 'flex',
                                                     justifyContent: 'space-between',
@@ -191,7 +186,6 @@ export default function TrackPage() {
                                                     position: 'relative'
                                                 }}
                                             >
-                                                {/* --- 1. ЛЕВАЯ ЧАСТЬ: Имя и Текст --- */}
                                                 <div className="comment-main-content" style={{ flex: 1, paddingRight: '2rem' }}>
                                                     <div style={{ fontSize: '0.85rem', lineHeight: '1' }}>
                                                         <span
@@ -206,15 +200,12 @@ export default function TrackPage() {
                                                     </p>
                                                 </div>
 
-                                                {/* --- 2. ПРАВАЯ ЧАСТЬ: Дата и Мусорка --- */}
                                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', minWidth: '80px' }}>
 
-                                                    {/* ЕЩЁ ЧУТЬ ВЫШЕ (marginTop: '-0.45rem') */}
                                                     <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1', marginTop: '-0.45rem' }}>
                                                         {new Date(comment.createdAt).toLocaleDateString()}
                                                     </span>
 
-                                                    {/* Мусорка */}
                                                     {isAuthor && (
                                                         <button
                                                             className="comment-delete-btn"

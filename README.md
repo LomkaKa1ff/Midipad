@@ -1,70 +1,47 @@
-# Getting Started with Create React App
+# MidiPad - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![MidiPad Banner](https://img.shields.io/badge/MidiPad-Share_Your_Melodies-white?style=for-the-badge)
 
-## Available Scripts
+Welcome to the official frontend repository for [midipad.net](https://midipad.net) — a fast, modern, and completely ad-free platform created for beatmakers, producers, and musicians to share and discover MIDI files.
 
-In the project directory, you can run:
+Check out the [MidiPad Backend Repository](https://github.com/ТВОЙ_НИК/midipad-backend).
 
-### `npm start`
+## Features
+* **Community Driven:** Like, comment, and track downloads for every MIDI file.
+* **Multi-language:** Built-in support for English and Russian.
+* **Fast Search & Sorting:** Find tracks by tags, popularity, or trending status.
+* **Responsive Design:** Fully mobile-friendly UI.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Tech Stack
+* **Core:** React 19, React Router v7
+* **Audio/MIDI:** Tone.js, html-midi-player
+* **Styling:** Tailwind CSS, PostCSS
+* **i18n:** react-i18next
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Requirements
+To run this project locally, you will need:
+* **Node.js** (v18.0.0 or higher recommended)
+* **npm** or **yarn**
+* The MidiPad Backend running locally on port `5000`.
 
-### `npm test`
+> 💡 **Note on API Proxying:** This project uses `http-proxy-middleware` via `src/setupProxy.js`. In development mode, requests starting with `/api` and `/uploads` are automatically proxied to the local backend server (`http://127.0.0.1:5000`) without modifying the request path.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Installation & Setup
 
-### `npm run build`
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/LomkaKa1ff/Midipad.git
+   cd midipad-frontend
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. **Install dependencies:**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   *(Note: --legacy-peer-deps is used to resolve strict dependency peer conflicts between React 19 and react-scripts)*
+   ```bash
+   npm install --legacy-peer-deps
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. **Run the development server:**
+   ```bash
+   npm start
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## License
+All rights reserved. This project is proprietary. No one may copy, distribute, or modify the code without the explicit permission of the author.
