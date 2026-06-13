@@ -40,8 +40,10 @@ function App() {
                 <Route path="/register" element={<RegisterPage />} />
 
                 <Route element={<MainLayout />}>
-                    <Route path="/" element={<MainPage />} />
-                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/" element={<MainPage sortType="trending" />} />
+                    <Route path="/trending" element={<MainPage sortType="trending" />} />
+                    <Route path="/popular" element={<MainPage sortType="popular" />} />
+                    <Route path="/newest" element={<MainPage sortType="newest" />} />
                     <Route path="/user/:id" element={<ProfilePage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/dmca" element={<DMCAPage />} />

@@ -4,11 +4,12 @@ import MidiCard from '../components/MidiCard';
 import FaultyTerminal from '../components/backgrounds/FaultyTerminal';
 import { useTranslation } from 'react-i18next';
 
-export default function MainPage() {
+export default function MainPage({ sortType }) {
     const [searchParams] = useSearchParams();
     const { t } = useTranslation();
 
-    const activeTab = searchParams.get('sort') || 'trending';
+    const activeTab = sortType || 'newest';
+
     const searchQuery = searchParams.get('search') || '';
 
     const [midis, setMidis] = useState([]);

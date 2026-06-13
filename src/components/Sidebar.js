@@ -1,35 +1,35 @@
 import React from 'react';
 import { TrendingUp, Star, Clock } from 'lucide-react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 export default function Sidebar() {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
+    const location = useLocation();
 
-    const activeTab = searchParams.get('sort') || 'trending';
+    const activeTab = location.pathname.replace('/', '') || 'trending';
 
     return (
         <aside className="sidebar">
             <nav className="nav-menu">
                 <div
                     className={`nav-item ${activeTab === 'trending' ? 'active' : ''}`}
-                    onClick={() => navigate('/?sort=trending')}
+                    onClick={() => navigate('/trending')}
                 >
                     <TrendingUp size={20} /> {t('trending')}
                 </div>
 
                 <div
                     className={`nav-item ${activeTab === 'popular' ? 'active' : ''}`}
-                    onClick={() => navigate('/?sort=popular')}
+                    onClick={() => navigate('/popular')}
                 >
                     <Star size={20} /> {t('popular')}
                 </div>
 
                 <div
                     className={`nav-item ${activeTab === 'newest' ? 'active' : ''}`}
-                    onClick={() => navigate('/?sort=newest')}
+                    onClick={() => navigate('/newest')}
                 >
                     <Clock size={20} /> {t('newest')}
                 </div>
