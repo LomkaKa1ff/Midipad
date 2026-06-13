@@ -127,27 +127,55 @@ export default function BottomPlayer() {
             return;
         }
 
+        const previousIsLiked = isLiked;
+        const previousLikes = currentTrack.likes || 0;
+
+        const newIsLiked = !previousIsLiked;
+        const newLikes = newIsLiked ? previousLikes + 1 : Math.max(0, previousLikes - 1);
+
+        let updatedLikedBy = [...(currentTrack.likedBy || [])];
+        if (newIsLiked) {
+            if (!updatedLikedBy.includes(userId)) updatedLikedBy.push(userId);
+        } else {
+            updatedLikedBy = updatedLikedBy.filter(id => String(id) !== String(userId));
+        }
+
+        if (updateCurrentTrack) {
+            updateCurrentTrack({ likes: newLikes, likedBy: updatedLikedBy });
+        }
+
         try {
             const res = await fetch(`/api/midi/like/${trackIdForAudio}`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
-            if (res.ok) {
-                const result = await res.json();
-                let updatedLikedBy = [...(currentTrack.likedBy || [])];
+            if (!res.ok) throw new Error("Server rejected like");
 
-                if (result.isLiked) {
-                    if (!updatedLikedBy.includes(userId)) updatedLikedBy.push(userId);
-                } else {
-                    updatedLikedBy = updatedLikedBy.filter(id => String(id) !== String(userId));
-                }
+            const result = await res.json();
+
+            if (currentTrack && (currentTrack._id || currentTrack.id) === trackIdForAudio) {
+                let finalLikedBy = [...(currentTrack.likedBy || [])];
+                if (result.isLiked && !finalLikedBy.includes(userId)) finalLikedBy.push(userId);
+                else if (!result.isLiked) finalLikedBy = finalLikedBy.filter(id => String(id) !== String(userId));
 
                 if (updateCurrentTrack) {
-                    updateCurrentTrack({ likes: result.likes, likedBy: updatedLikedBy });
+                    updateCurrentTrack({ likes: result.likes, likedBy: finalLikedBy });
                 }
             }
-        } catch (err) { console.error("Ошибка лайка:", err); }
+        } catch (err) {
+            console.error("Like error:", err);
+
+            if (currentTrack && (currentTrack._id || currentTrack.id) === trackIdForAudio) {
+                let rollbackLikedBy = [...(currentTrack.likedBy || [])];
+                if (previousIsLiked && !rollbackLikedBy.includes(userId)) rollbackLikedBy.push(userId);
+                else if (!previousIsLiked) rollbackLikedBy = rollbackLikedBy.filter(id => String(id) !== String(userId));
+
+                if (updateCurrentTrack) {
+                    updateCurrentTrack({ likes: previousLikes, likedBy: rollbackLikedBy });
+                }
+            }
+        }
     };
 
     const togglePlay = () => {

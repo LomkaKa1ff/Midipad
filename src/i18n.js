@@ -74,6 +74,13 @@ const resources = {
             "action_cannot_be_undone": "This action cannot be undone.",
             "btn_cancel": "Cancel",
             "btn_delete": "Delete",
+            "uploads": "Uploads",
+            "liked": "Liked",
+            "user_no_uploads_yet": "This user hasn't uploaded anything yet.",
+            "user_no_likes_yet": "This user hasn't liked anything yet.",
+            "track_deleted_success": "Track deleted successfully!",
+            "failed_to_delete": "Failed to delete track",
+            "server_error": "Server error",
             "btn_deleting": "Deleting...",
 
             // Tag Page
@@ -96,6 +103,12 @@ const resources = {
             "upload_confirm": "By uploading, you confirm that your content does not violate copyright and meets our community guidelines.",
             "uploading": "Uploading...",
             "publish_track": "Publish Track",
+            "custom_cover_title": "Custom Cover",
+            "choose_cover_btn": "Choose a cover image",
+            "no_file_chosen": "No file chosen",
+            "or_paste_link": "or paste a GIF link",
+            "cover_description": "Add a background to your sound card (max 2MB).",
+            "err_cover_too_large": "Cover image too large (max 2MB)",
 
             // Upload Errors
             "err_only_midi": "Only .mid or .midi files are allowed!",
@@ -106,7 +119,14 @@ const resources = {
             "err_select_file": "Please select a MIDI file.",
             "err_enter_title": "Please enter a title.",
             "err_agree_terms": "You must agree to the terms and conditions.",
-            "err_title_length": "Title must be 50 characters or less."
+            "err_title_length": "Title must be 50 characters or less.",
+
+            // Edit Modal
+            "edit_track_title": "Edit Track Information",
+            "cover_exists": "Cover image is already set",
+            "remove_cover_btn": "Remove Cover",
+            "save_changes_btn": "Save Changes",
+            "saving": "Saving..."
         }
     },
     ru: {
@@ -180,6 +200,13 @@ const resources = {
             "action_cannot_be_undone": "Это действие нельзя отменить.",
             "btn_cancel": "Отмена",
             "btn_delete": "Удалить",
+            "uploads": "Загрузки",
+            "liked": "Понравилось",
+            "user_no_uploads_yet": "Этот пользователь еще ничего не загрузил.",
+            "user_no_likes_yet": "Этому пользователю еще ничего не понравилось.",
+            "track_deleted_success": "Трек успешно удален!",
+            "failed_to_delete": "Не удалось удалить трек",
+            "server_error": "Ошибка сервера",
             "btn_deleting": "Удаление...",
 
             // Tag Page
@@ -202,6 +229,12 @@ const resources = {
             "upload_confirm": "Загружая файл, вы подтверждаете, что контент не нарушает авторские права и соответствует правилам.",
             "uploading": "Загрузка...",
             "publish_track": "Опубликовать трек",
+            "custom_cover_title": "Кастомная обложка",
+            "choose_cover_btn": "Выбрать обложку",
+            "no_file_chosen": "Файл не выбран",
+            "or_paste_link": "или вставьте ссылку на GIF",
+            "cover_description": "Добавьте анимированный или статичный фон для карточки трека (макс 2МБ).",
+            "err_cover_too_large": "Файл обложки слишком большой (макс 2МБ)",
 
             // Upload Errors
             "err_only_midi": "Разрешены только файлы .mid или .midi!",
@@ -212,7 +245,14 @@ const resources = {
             "err_select_file": "Пожалуйста, выберите MIDI файл.",
             "err_enter_title": "Пожалуйста, введите название.",
             "err_agree_terms": "Вы должны согласиться с условиями использования.",
-            "err_title_length": "Название не должно превышать 50 символов."
+            "err_title_length": "Название не должно превышать 50 символов.",
+
+            // Edit Modal
+            "edit_track_title": "Редактировать трек",
+            "cover_exists": "Обложка уже установлена",
+            "remove_cover_btn": "Удалить обложку",
+            "save_changes_btn": "Сохранить изменения",
+            "saving": "Сохранение..."
         }
     }
 };

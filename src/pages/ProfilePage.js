@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import MidiCard from '../components/MidiCard';
 import FaultyTerminal from '../components/backgrounds/FaultyTerminal';
+import EditModal from '../components/EditModal';
 import { User, UploadCloud, Heart, AlertTriangle } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -9,9 +10,27 @@ import { useTranslation } from 'react-i18next';
 export default function ProfilePage() {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { id } = useParams();
+
     const token = localStorage.getItem('token');
     const userStr = localStorage.getItem('user');
-    const user = userStr ? JSON.parse(userStr) : null;
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [trackToEdit, setTrackToEdit] = useState(null);
+
+    const loggedInUser = useMemo(() => {
+        try {
+            return userStr ? JSON.parse(userStr) : null;
+        } catch(e) {
+            return null;
+        }
+    }, [userStr]);
+
+    const currentUserId = loggedInUser?.id || loggedInUser?._id;
+    const isOwnProfile = !id || String(id) === String(currentUserId);
+    const targetUserId = id || currentUserId;
+
+    const [profileUser, setProfileUser] = useState(isOwnProfile ? loggedInUser : null);
 
     const [activeTab, setActiveTab] = useState('uploads');
     const [tracks, setTracks] = useState([]);
@@ -25,30 +44,52 @@ export default function ProfilePage() {
     const tracksPerPage = 16;
 
     useEffect(() => {
-        if (!token || !user) {
+        if (isOwnProfile && (!token || !loggedInUser)) {
             navigate('/login');
         }
-    }, [token, user, navigate]);
+    }, [isOwnProfile, token, loggedInUser, navigate]);
 
     useEffect(() => {
-        if (!token) return;
+        if (!isOwnProfile && targetUserId) {
+            fetch(`/api/auth/user/${targetUserId}`)
+                .then(res => res.json())
+                .then(data => setProfileUser(data))
+                .catch(err => console.error("Error fetching user data:", err));
+        } else if (isOwnProfile) {
+            setProfileUser(loggedInUser);
+        }
+    }, [id, isOwnProfile, targetUserId, loggedInUser]);
+
+    useEffect(() => {
+        if (!targetUserId) return;
 
         const fetchProfileData = async () => {
             setIsLoading(true);
             try {
-                const endpoint = activeTab === 'uploads' ? 'uploads' : 'liked';
-                const response = await fetch(`/api/midi/profile/${endpoint}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+                let url = '';
+                let headers = {};
+
+                if (isOwnProfile) {
+                    const endpoint = activeTab === 'uploads' ? 'uploads' : 'liked';
+                    url = `/api/midi/profile/${endpoint}`;
+                    headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+                } else {
+                    url = activeTab === 'uploads'
+                        ? `/api/midi/author/${targetUserId}`
+                        : `/api/midi/liked-by/${targetUserId}`;
+                }
+
+                const response = await fetch(url, { headers });
                 const data = await response.json();
 
                 if (response.ok) {
-                    setTracks(data);
+                    setTracks(Array.isArray(data) ? data : []);
+                } else {
+                    setTracks([]);
                 }
             } catch (error) {
                 console.error("Error fetching profile tracks:", error);
+                setTracks([]);
             } finally {
                 setIsLoading(false);
             }
@@ -56,7 +97,7 @@ export default function ProfilePage() {
 
         fetchProfileData();
         setCurrentPage(1);
-    }, [activeTab, token]);
+    }, [activeTab, targetUserId, isOwnProfile, token]);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -93,15 +134,15 @@ export default function ProfilePage() {
                     return updated;
                 });
 
-                toast.success("Track deleted successfully!");
+                toast.success(t('track_deleted_success'));
                 closeDeleteModal();
             } else {
                 const errData = await res.json();
-                toast.error(errData.message || "Failed to delete track");
+                toast.error(errData.message || t('failed_to_delete'));
             }
         } catch (err) {
             console.error("Error deleting track:", err);
-            toast.error("Server error");
+            toast.error(t('server_error'));
         } finally {
             setIsDeleting(false);
         }
@@ -113,7 +154,9 @@ export default function ProfilePage() {
         </div>
     ), []);
 
-    if (!user) return null;
+    if (!profileUser) {
+        return <div style={{ textAlign: 'center', color: 'white', padding: '10rem 0' }}>{t('loading_profile')}</div>;
+    }
 
     const indexOfLastTrack = currentPage * tracksPerPage;
     const indexOfFirstTrack = indexOfLastTrack - tracksPerPage;
@@ -132,9 +175,9 @@ export default function ProfilePage() {
                     <User size={40} color="white" />
                 </div>
                 <h1 className="title-main" style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>
-                    {user.username}
+                    {profileUser.username}
                 </h1>
-                <p className="text-muted">{t('member_since')} {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : t('recently')}</p>
+                <p className="text-muted">{t('member_since')} {profileUser.createdAt ? new Date(profileUser.createdAt).toLocaleDateString() : t('recently')}</p>
             </div>
 
             <div className="profile-tabs" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '3rem' }}>
@@ -143,14 +186,14 @@ export default function ProfilePage() {
                     onClick={() => setActiveTab('uploads')}
                     style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}
                 >
-                    <UploadCloud size={18} /> {t('my_uploads')} ({activeTab === 'uploads' ? tracks.length : '...'})
+                    <UploadCloud size={18} /> {isOwnProfile ? t('my_uploads') : t('uploads')} ({activeTab === 'uploads' ? tracks.length : '...'})
                 </div>
                 <div
                     className={`nav-item ${activeTab === 'liked' ? 'active' : ''}`}
                     onClick={() => setActiveTab('liked')}
                     style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1rem' }}
                 >
-                    <Heart size={18} /> {t('liked_tracks')} ({activeTab === 'liked' ? tracks.length : '...'})
+                    <Heart size={18} /> {isOwnProfile ? t('liked_tracks') : t('liked')} ({activeTab === 'liked' ? tracks.length : '...'})
                 </div>
             </div>
 
@@ -160,13 +203,21 @@ export default function ProfilePage() {
                 </div>
             ) : tracks.length === 0 ? (
                 <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '3rem 0' }}>
-                    {activeTab === 'uploads' ? t('no_uploads_yet') : t('no_likes_yet')}
+                    {activeTab === 'uploads'
+                        ? (isOwnProfile ? t('no_uploads_yet') : t('user_no_uploads_yet'))
+                        : (isOwnProfile ? t('no_likes_yet') : t('user_no_likes_yet'))}
                 </div>
             ) : (
                 <>
                     <div className="midi-grid">
                         {currentTracks.map(midi => (
-                            <MidiCard key={midi._id || midi.id} data={midi} onDeleteClick={openDeleteModal} playlist={currentTracks} />
+                            <MidiCard
+                                key={midi._id || midi.id}
+                                data={midi}
+                                onDeleteClick={isOwnProfile ? openDeleteModal : null}
+                                onEditClick={isOwnProfile ? (track) => { setTrackToEdit(track); setIsEditModalOpen(true); } : null} // <-- НАШ ФИКС
+                                playlist={currentTracks}
+                            />
                         ))}
                     </div>
 
@@ -208,7 +259,7 @@ export default function ProfilePage() {
                 </>
             )}
 
-            {isModalOpen && (
+            {isModalOpen && isOwnProfile && (
                 <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0, 0, 0, 0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, backdropFilter: 'blur(4px)' }}>
                     <div style={{ background: '#141414', border: '1px solid rgba(255, 85, 85, 0.2)', padding: '2rem', borderRadius: '12px', maxWidth: '400px', width: '90%', textAlign: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
                         <div style={{ color: '#ff5555', marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>
@@ -240,6 +291,13 @@ export default function ProfilePage() {
                     </div>
                 </div>
             )}
+
+            <EditModal
+                isOpen={isEditModalOpen}
+                onClose={() => { setIsEditModalOpen(false); setTrackToEdit(null); }}
+                trackData={trackToEdit}
+            />
+
         </>
     );
 }

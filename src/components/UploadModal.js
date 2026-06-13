@@ -14,7 +14,11 @@ export default function UploadModal({ isOpen, onClose }) {
     const [tagInput, setTagInput] = useState('');
     const [agreed, setAgreed] = useState(false);
 
+    const [coverFile, setCoverFile] = useState(null);
+    const [coverUrl, setCoverUrl] = useState('');
+
     const fileInputRef = useRef(null);
+    const coverInputRef = useRef(null);
 
     if (!isOpen) return null;
 
@@ -26,6 +30,8 @@ export default function UploadModal({ isOpen, onClose }) {
         setTags([]);
         setTagInput('');
         setAgreed(false);
+        setCoverFile(null);
+        setCoverUrl('');
     };
 
     const handleClose = () => {
@@ -49,6 +55,18 @@ export default function UploadModal({ isOpen, onClose }) {
         if (!title) {
             setTitle(selectedFile.name.replace(/\.midi?$/i, ''));
         }
+    };
+
+    const handleCoverSelect = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (file.size > 2097152) { // 2MB
+            return setError(t('err_cover_too_large') || 'Cover image too large (max 2MB)');
+        }
+
+        setCoverFile(file);
+        setCoverUrl(''); // Сбрасываем URL, если загрузили файл
     };
 
     const handleDragOver = (e) => {
@@ -112,6 +130,12 @@ export default function UploadModal({ isOpen, onClose }) {
         formData.append('title', title);
         formData.append('tags', JSON.stringify(tags));
 
+        if (coverFile) {
+            formData.append('coverImage', coverFile);
+        } else if (coverUrl) {
+            formData.append('coverUrl', coverUrl);
+        }
+
         try {
             const token = localStorage.getItem('token');
             const response = await fetch('/api/midi/upload', {
@@ -120,7 +144,15 @@ export default function UploadModal({ isOpen, onClose }) {
                 body: formData
             });
 
-            const data = await response.json();
+            const text = await response.text();
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (err) {
+                console.error("Non-JSON response from server:", text);
+                throw new Error("The server has terminated the connection or the file is too large..");
+            }
+
             if (!response.ok) throw new Error(data.message || 'Upload failed');
 
             resetForm();
@@ -191,7 +223,57 @@ export default function UploadModal({ isOpen, onClose }) {
                         )}
                     </div>
 
-                    <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '1rem', marginTop: '0.5rem', marginBottom: '1rem' }}>
+                    <div className="auth-input-group" style={{ marginTop: '1.5rem' }}>
+                        <label style={{ display: 'block', color: 'white', marginBottom: '0.5rem', fontWeight: 'bold' }}>
+                            {t('custom_cover_title') || 'Custom Cover'}
+                        </label>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px' }}>
+
+                            <input
+                                type="file"
+                                accept="image/*"
+                                ref={coverInputRef}
+                                onChange={handleCoverSelect}
+                                style={{ display: 'none' }}
+                            />
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => coverInputRef.current.click()}
+                                    style={{ padding: '0.4rem 0.8rem', background: '#333', border: '1px solid rgba(255,255,255,0.1)', color: 'white', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}
+                                >
+                                    {t('choose_cover_btn') || 'Choose a cover image'}
+                                </button>
+                                <span style={{ color: '#aaa', fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px' }}>
+                                    {coverFile ? coverFile.name : (t('no_file_chosen') || 'No file chosen')}
+                                </span>
+                            </div>
+
+                            <div style={{ color: '#aaa', fontSize: '0.8rem', textAlign: 'center', margin: '0.5rem 0' }}>
+                                - {t('or_paste_link') || 'or paste a GIF link'} -
+                            </div>
+
+                            <input
+                                type="text"
+                                placeholder="https://example.com/image.gif"
+                                value={coverUrl}
+                                onChange={(e) => {
+                                    setCoverUrl(e.target.value);
+                                    if (e.target.value) setCoverFile(null);
+                                }}
+                                className="auth-input"
+                                style={{ padding: '0.5rem' }}
+                            />
+
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', margin: '0', marginTop: '0.5rem', lineHeight: '1.4' }}>
+                                {t('cover_description') || 'Add a background to your sound card (max 2MB).'}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '1rem', marginTop: '1.5rem', marginBottom: '1rem' }}>
                         <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1.8', marginBottom: '1rem' }}>
                             <p style={{ margin: 0 }}>{t('supports_only')}</p>
                             <p style={{ margin: 0 }}>{t('supported_formats')}</p>

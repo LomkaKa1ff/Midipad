@@ -42,6 +42,7 @@ function App() {
                 <Route element={<MainLayout />}>
                     <Route path="/" element={<MainPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/user/:id" element={<ProfilePage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/dmca" element={<DMCAPage />} />
                     <Route path="/contacts" element={<ContactsPage />} />

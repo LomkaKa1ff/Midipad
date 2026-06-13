@@ -87,7 +87,11 @@ export default function Header() {
 
                 {user ? (
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <Link to="/profile" className="btn btn-secondary" style={{ display: 'flex', textDecoration: 'none', border: 'none', background: 'rgba(255, 255, 255, 0.05)' }}>
+                        <Link
+                            to={`/user/${user.id || user._id}`}
+                            className="btn btn-secondary"
+                            style={{ display: 'flex', textDecoration: 'none', border: 'none', background: 'rgba(255, 255, 255, 0.05)' }}
+                        >
                             <User size={18} />
                             {user.username}
                         </Link>
