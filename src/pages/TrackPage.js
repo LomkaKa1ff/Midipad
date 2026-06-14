@@ -4,6 +4,7 @@ import MidiCard from '../components/MidiCard';
 import FaultyTerminal from '../components/backgrounds/FaultyTerminal';
 import { ArrowLeft, Send, Trash2 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { Helmet } from 'react-helmet-async';
 
 export default function TrackPage() {
     const { id } = useParams();
@@ -107,6 +108,13 @@ export default function TrackPage() {
     return (
         <>
             {memoizedBackground}
+
+            {track && (
+                <Helmet>
+                    <title>{`${track.title} MIDI Download - MidiPad`}</title>
+                    <meta name="description" content={`Download the MIDI file for ${track.title} by ${track.author || 'Unknown'} for free. Listen to the track directly in your browser.`} />
+                </Helmet>
+            )}
 
             <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem', color: '#fff' }}>
                 <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)', textDecoration: 'none', marginBottom: '2rem' }}>

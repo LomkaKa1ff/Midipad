@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import MidiCard from '../components/MidiCard';
 import FaultyTerminal from '../components/backgrounds/FaultyTerminal';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 
 export default function MainPage({ sortType }) {
     const [searchParams] = useSearchParams();
@@ -51,8 +52,27 @@ export default function MainPage({ sortType }) {
     const currentTracks = midis.slice(indexOfFirstTrack, indexOfLastTrack);
     const totalPages = Math.ceil(midis.length / tracksPerPage);
 
+    let seoTitle = 'MidiPad | Upload, Download & Listen to MIDI Music';
+    let seoDesc = 'Service for searching and downloading MIDI files for digital instruments and games.';
+
+    if (searchQuery) {
+        seoTitle = `Search results for "${searchQuery}" - MidiPad`;
+    } else if (activeTab === 'trending') {
+        seoTitle = 'Trending MIDI Files & Game Covers - MidiPad';
+        seoDesc = 'Discover the most trending MIDI tracks right now. Download free game covers, memes, and top hits.';
+    } else if (activeTab === 'popular') {
+        seoTitle = 'Download Popular MIDI Music Free - MidiPad';
+    } else if (activeTab === 'newest') {
+        seoTitle = 'Newest MIDI Uploads & Tracks - MidiPad';
+    }
+
     return (
         <>
+            <Helmet>
+                <title>{seoTitle}</title>
+                <meta name="description" content={seoDesc} />
+            </Helmet>
+
             <div className="background-layer">
                 <FaultyTerminal
                     scale={3}

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Main Page -->
+    <url>
+        <loc>https://midipad.net/</loc>
+        <lastmod>2026-06-13</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- Trending Page -->
+    <url>
+        <loc>https://midipad.net/trending</loc>
+        <lastmod>2026-06-13</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Popular Page -->
+    <url>
+        <loc>https://midipad.net/popular</loc>
+        <lastmod>2026-06-13</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Newest Page -->
+    <url>
+        <loc>https://midipad.net/newest</loc>
+        <lastmod>2026-06-13</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Auth Page -->
+    <url>
+        <loc>https://midipad.net/login</loc>
+        <lastmod>2026-06-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+    <!-- Registration Page -->
+    <url>
+        <loc>https://midipad.net/register</loc>
+        <lastmod>2026-06-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+    <!-- About Page -->
+    <url>
+        <loc>https://midipad.net/about</loc>
+        <lastmod>2026-06-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+    <!-- Rules & DMCA Page -->
+    <url>
+        <loc>https://midipad.net/dmca</loc>
+        <lastmod>2026-06-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+    <!-- Contact Page -->
+    <url>
+        <loc>https://midipad.net/contacts</loc>
+        <lastmod>2026-06-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+    <!-- Terms Page -->
+    <url>
+        <loc>https://midipad.net/terms</loc>
+        <lastmod>2026-06-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+    <!-- Privacy Page -->
+    <url>
+        <loc>https://midipad.net/privacy</loc>
+        <lastmod>2026-06-01</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.3</priority>
+    </url>
+</urlset>
