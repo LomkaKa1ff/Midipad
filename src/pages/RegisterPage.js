@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export default function RegisterPage() {
     const { t } = useTranslation();
@@ -17,12 +18,17 @@ export default function RegisterPage() {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [agreed, setAgreed] = useState(false);
+    const [captchaToken, setCaptchaToken] = useState(null);
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+
+        if (!captchaToken) {
+            return setError('Please complete the security check.');
+        }
 
         const { username, email, password, confirmPassword } = formData;
 
@@ -52,7 +58,7 @@ export default function RegisterPage() {
             const regResponse = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password })
+                body: JSON.stringify({ username, email, password, captchaToken })
             });
             const regData = await regResponse.json();
 
@@ -133,8 +139,12 @@ export default function RegisterPage() {
                         </div>
                     </div>
 
-                    <div style={{ height: '60px', background: '#111', border: '1px solid #333', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555', fontSize: '0.8rem', marginTop: '0.5rem' }}>
-                        Cloudflare Turnstile Captcha Placeholder
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', marginBottom: '1rem' }}>
+                        <Turnstile
+                            siteKey="0x4AAAAAADtjiIhg3hksJ485"
+                            options={{ theme: 'dark' }}
+                            onSuccess={(token) => setCaptchaToken(token)}
+                        />
                     </div>
 
                     <button

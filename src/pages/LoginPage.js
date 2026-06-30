@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 export default function LoginPage() {
     const { t } = useTranslation();
@@ -9,6 +10,7 @@ export default function LoginPage() {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [captchaToken, setCaptchaToken] = useState(null);
     const [searchParams] = useSearchParams();
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,12 +18,17 @@ export default function LoginPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+
+        if (!captchaToken) {
+            return setError('Please complete the security check.');
+        }
+
         setIsLoading(true);
         try {
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({ ...formData, captchaToken })
             });
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || 'Invalid credentials');
@@ -70,8 +77,12 @@ export default function LoginPage() {
                         <input type="password" name="password" className="auth-input" placeholder="••••••••" required value={formData.password} onChange={handleChange} />
                     </div>
 
-                    <div style={{ height: '60px', background: '#111', border: '1px solid #333', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#555', fontSize: '0.8rem', marginTop: '0.5rem' }}>
-                        Cloudflare Turnstile Captcha Placeholder
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', marginBottom: '1rem' }}>
+                        <Turnstile
+                            siteKey="0x4AAAAAADtjiIhg3hksJ485"
+                            options={{ theme: 'dark' }}
+                            onSuccess={(token) => setCaptchaToken(token)}
+                        />
                     </div>
 
                     <button type="submit" className="btn-auth-submit" disabled={isLoading}>
